@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour {
     [SerializeField] private float speed = 1f;
+    [SerializeField] private bool showHitbox = false;
     private float distanceToTravel = 15f;
 
     private Vector2 startPos;
@@ -35,6 +36,7 @@ public class Fish : MonoBehaviour {
     }
 
     private void OnDrawGizmos() {
+        if (!showHitbox) return;
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(transform.position, sprite.bounds.size);
     }
