@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class HookController : MonoBehaviour {
@@ -9,22 +8,22 @@ public class HookController : MonoBehaviour {
     [SerializeField] private float hookCastingTime = 3f;
     private float hookCastingTimeElapsed = 0f;
 
-    private Bounds _hookArea;
+    public SpriteRenderer sprite { get; private set; }
     private Bounds _constraintsArea;
 
     private bool casting = false;
 
     public event Action HookLanded;
 
-    void Awake() {
+    private void Awake() {
        if (!hookConstraints) {
-            print("Yo hook constraints not set in WASD");
+            print("Yo hook constraints not set in HookController");
        }
-        _hookArea = GetComponent<SpriteRenderer>().bounds;
+        sprite = GetComponent<SpriteRenderer>();
         _constraintsArea = hookConstraints.GetComponent<SpriteRenderer>().bounds;
     }
 
-    void Update() {
+    private void Update() {
         if (casting) {
             if (hookCastingTimeElapsed < hookCastingTime) {
                 hookCastingTimeElapsed += Time.deltaTime;
@@ -33,8 +32,7 @@ public class HookController : MonoBehaviour {
             hookCastingTimeElapsed = 0f;
             casting = false;
             
-            // emit the HookLanded event, GameManager subscribes to this
-            // and does the collision calculations over there
+            // emit the HookLanded event, GameManager subs to this and does the collision checks
             HookLanded?.Invoke();
         }
 
@@ -46,7 +44,6 @@ public class HookController : MonoBehaviour {
     }
 
     private void CastHook() {
-        print("Casting Hook");
         casting = true;
     }
 
@@ -55,22 +52,22 @@ public class HookController : MonoBehaviour {
         nextPos += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * speed * Time.deltaTime;
         nextPos = KeepInBounds(nextPos);
         transform.position = nextPos;
-        
-        // transform.Translate(move * speed * Time.deltaTime);
     }
 
     private Vector2 KeepInBounds(Vector2 pos) {
-        if (pos.x - _hookArea.extents.x < _constraintsArea.center.x - _constraintsArea.extents.x) {
-            pos.x = _constraintsArea.center.x - _constraintsArea.center.x - _constraintsArea.extents.x + _hookArea.extents.x;
-        } else if (pos.x + _hookArea.extents.x > _constraintsArea.center.x + _constraintsArea.extents.x) {
-            pos.x = _constraintsArea.center.x + _constraintsArea.extents.x - _hookArea.extents.x;
+        Bounds hookArea = sprite.bounds;
+        if (hookArea.min.x < _constraintsArea.min.x) {
+            pos.x = _constraintsArea.min.x + hookArea.extents.x;
+        } else if (hookArea.max.x > _constraintsArea.max.x) {
+            pos.x = _constraintsArea.max.x - hookArea.extents.x;
         }
 
-        if (pos.y - _hookArea.extents.y < _constraintsArea.center.y - _constraintsArea.extents.y) {
-            pos.y = _constraintsArea.center.y - _constraintsArea.center.y - _constraintsArea.extents.y + _hookArea.extents.y;
-        } else if (pos.y + _hookArea.extents.y > _constraintsArea.center.y + _constraintsArea.extents.y) {
-            pos.y = _constraintsArea.center.y + _constraintsArea.extents.y - _hookArea.extents.y;
+        if (hookArea.min.y < _constraintsArea.min.y) {
+            pos.y = _constraintsArea.min.y + hookArea.extents.y;
+        } else if (hookArea.max.y > _constraintsArea.max.y) {
+            pos.y = _constraintsArea.max.y - hookArea.extents.y;
         }
+
         return pos;
     }
 }

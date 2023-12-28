@@ -2,41 +2,40 @@ using System;
 using UnityEngine;
 
 public class Fish : MonoBehaviour {
-    [SerializeField] float speed = 1f;
+    [SerializeField] private float speed = 1f;
     private float distanceToTravel = 15f;
 
     private Vector2 startPos;
-    SpriteRenderer sprite;
-    // NOTE: pass a ref to the fish that died so the `FishSpawner` can remove it from the fish array
-    // is this silly/overcomplicated?
+    public SpriteRenderer sprite { get; private set; }
     public event Action<Fish> died;
 
-    void Start() {
+    private void Start() {
         startPos = transform.position;
         sprite = GetComponent<SpriteRenderer>();
-        // Bounds pos = sprite.bounds;
     }
 
-    void Update() {
+    private void Update() {
         transform.position += Vector3.left * Time.deltaTime * speed;
-        // Bounds pos = sprite.bounds;
-        // print(pos);
         if (distanceTravelled() >= distanceToTravel) {
-            // BUG: can't do this; the FishSpawner holds an array with a ref to each fish
-            Died();
+            DiedOfNaturalCauses();
             Destroy(gameObject);
         }
     }
 
-    float distanceTravelled() {
-        // if (transform.position.x - startPos.x >= distanceToTravel) {
-
-        // }
+    public float distanceTravelled() {
         return Mathf.Abs(transform.position.x - startPos.x);
     }
 
-    void Died() {
-        print("wow a fish died (from fish script)");
+    private void DiedOfNaturalCauses() {
         died?.Invoke(this);
+    }
+
+    public void Caught() {
+        Destroy(gameObject);
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(transform.position, sprite.bounds.size);
     }
 }
