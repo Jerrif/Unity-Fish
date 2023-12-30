@@ -56,11 +56,11 @@ public class GameManager : MonoBehaviour {
 
     private void FishSpawned(Fish newFish) {
         aliveFish.Add(newFish);
-        newFish.died += FishDied;
+        newFish.diedOfNaturalCauses += FishDied;
     }
 
     private void FishDied(Fish dedFish) {
         aliveFish.Remove(dedFish);
-        dedFish.died -= FishDied;
+        dedFish.diedOfNaturalCauses -= FishDied;
     }
 }

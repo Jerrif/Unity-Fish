@@ -8,18 +8,21 @@ public class Fish : MonoBehaviour {
 
     private Vector2 startPos;
     public SpriteRenderer sprite { get; private set; }
-    public event Action<Fish> died;
+    private FadeSprite spriteFader;
+    private bool markedForDeath = false;
+    public event Action<Fish> diedOfNaturalCauses;
 
     private void Start() {
-        startPos = transform.position;
         sprite = GetComponent<SpriteRenderer>();
+        startPos = transform.position;
+        spriteFader = gameObject.AddComponent<FadeSprite>();
+        spriteFader.StartFade(FadeSprite.Direction.IN);
     }
 
     private void Update() {
         transform.position += Vector3.left * Time.deltaTime * speed;
-        if (distanceTravelled() >= distanceToTravel) {
-            DiedOfNaturalCauses();
-            Destroy(gameObject);
+        if (!markedForDeath && distanceTravelled() >= distanceToTravel) {
+            MarkForDeath();
         }
     }
 
@@ -27,8 +30,16 @@ public class Fish : MonoBehaviour {
         return Mathf.Abs(transform.position.x - startPos.x);
     }
 
+    private void MarkForDeath() {
+        markedForDeath = true;
+        spriteFader.StartFade(FadeSprite.Direction.OUT);
+        spriteFader.fadeComplete += DiedOfNaturalCauses;
+    }
+
     private void DiedOfNaturalCauses() {
-        died?.Invoke(this);
+        spriteFader.fadeComplete -= DiedOfNaturalCauses;
+        diedOfNaturalCauses?.Invoke(this);
+        Destroy(gameObject);
     }
 
     public void Caught() {
