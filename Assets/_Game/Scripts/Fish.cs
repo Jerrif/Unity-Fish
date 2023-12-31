@@ -12,10 +12,13 @@ public class Fish : MonoBehaviour {
     private bool markedForDeath = false;
     public event Action<Fish> diedOfNaturalCauses;
 
-    private void Start() {
+    private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
-        startPos = transform.position;
         spriteFader = gameObject.AddComponent<FadeSprite>();
+    }
+
+    private void Start() {
+        startPos = transform.position;
         spriteFader.StartFade(FadeSprite.Direction.IN);
     }
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class HookController : MonoBehaviour {
     
-    [SerializeField] private float speed = 3f;
+    [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private GameObject hookConstraints;
     [SerializeField] private float hookCastingTime = 3f;
     private float hookCastingTimeElapsed = 0f;
@@ -49,7 +49,7 @@ public class HookController : MonoBehaviour {
 
     private void HandleMovement() {
         Vector2 nextPos = (Vector2)transform.position;
-        nextPos += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * speed * Time.deltaTime;
+        nextPos += new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * moveSpeed * Time.deltaTime;
         nextPos = KeepInBounds(nextPos);
         transform.position = nextPos;
     }

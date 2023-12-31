@@ -13,7 +13,7 @@ public class FadeSprite : MonoBehaviour {
 
     public event Action fadeComplete;
 
-    private void OnEnable() {
+    private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
         newColor = new Color(1f, 1f, 1f, 1f);
     }
