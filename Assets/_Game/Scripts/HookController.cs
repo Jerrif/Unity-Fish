@@ -6,16 +6,20 @@ public class HookController : MonoBehaviour {
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private GameObject hookConstraints;
     [SerializeField] public float hookCastingTime = 3f;
+    [SerializeField] public float hookReelingTime = 1f; // delay period after landing, before being able to cast again
     public float hookCastingTimeElapsed { get; private set; } = 0f;
+    public float hookReelingTimeElapsed { get; private set; } = 0f;
 
     public SpriteRenderer sprite { get; private set; }
     private Bounds _constraintsArea;
 
     private bool casting = false;
     // public bool casting { get; private set; } = false;
+    private bool reeling = false;
 
     public event Action<float> HookCast;
     public event Action HookLanded;
+    public event Action ReelingFinished;
 
     private void Awake() {
        if (!hookConstraints) {
@@ -36,6 +40,21 @@ public class HookController : MonoBehaviour {
             
             // emit the HookLanded event, GameManager subs to this and does the collision checks
             HookLanded?.Invoke();
+
+            ReelIn();
+        }
+
+        if (reeling) {
+            print("woah reeling in");
+            if (hookReelingTimeElapsed < hookReelingTime) {
+                hookReelingTimeElapsed += Time.deltaTime;
+                return;
+            }
+            hookReelingTimeElapsed = 0f;
+            reeling = false;
+
+            ReelingFinished?.Invoke();
+            return;
         }
 
         HandleMovement();
@@ -43,6 +62,10 @@ public class HookController : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Space)) {
             CastHook();
         }
+    }
+
+    private void ReelIn() {
+        reeling = true;
     }
 
     private void CastHook() {
