@@ -5,14 +5,16 @@ public class HookController : MonoBehaviour {
     
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private GameObject hookConstraints;
-    [SerializeField] private float hookCastingTime = 3f;
-    private float hookCastingTimeElapsed = 0f;
+    [SerializeField] public float hookCastingTime = 3f;
+    public float hookCastingTimeElapsed { get; private set; } = 0f;
 
     public SpriteRenderer sprite { get; private set; }
     private Bounds _constraintsArea;
 
     private bool casting = false;
+    // public bool casting { get; private set; } = false;
 
+    public event Action<float> HookCast;
     public event Action HookLanded;
 
     private void Awake() {
@@ -45,6 +47,7 @@ public class HookController : MonoBehaviour {
 
     private void CastHook() {
         casting = true;
+        HookCast?.Invoke(hookCastingTime);
     }
 
     private void HandleMovement() {
