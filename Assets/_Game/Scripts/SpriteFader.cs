@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class FadeSprite : MonoBehaviour {
+public class SpriteFader : MonoBehaviour {
     public float fadeDuration { get; private set; } = 1f;
     private float progress = 0f;
     private bool fading = false;

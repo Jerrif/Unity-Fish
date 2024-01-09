@@ -8,18 +8,18 @@ public class Fish : MonoBehaviour {
 
     private Vector2 startPos;
     public SpriteRenderer sprite { get; private set; }
-    private FadeSprite spriteFader;
+    private SpriteFader spriteFader;
     private bool markedForDeath = false;
     public event Action<Fish> diedOfNaturalCauses;
 
     private void Awake() {
         sprite = GetComponent<SpriteRenderer>();
-        spriteFader = gameObject.AddComponent<FadeSprite>();
+        spriteFader = gameObject.AddComponent<SpriteFader>();
     }
 
     private void Start() {
         startPos = transform.position;
-        spriteFader.StartFade(FadeSprite.Direction.IN);
+        spriteFader.StartFade(SpriteFader.Direction.IN);
     }
 
     private void Update() {
@@ -35,7 +35,7 @@ public class Fish : MonoBehaviour {
 
     private void MarkForDeath() {
         markedForDeath = true;
-        spriteFader.StartFade(FadeSprite.Direction.OUT);
+        spriteFader.StartFade(SpriteFader.Direction.OUT);
         spriteFader.fadeComplete += DiedOfNaturalCauses;
     }
 
