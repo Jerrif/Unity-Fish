@@ -46,7 +46,6 @@ public class HookController : MonoBehaviour {
         }
 
         if (reeling) {
-            print("woah reeling in");
             if (hookReelingTimeElapsed < hookReelingTime) {
                 hookReelingTimeElapsed += Time.deltaTime;
                 return;
@@ -55,7 +54,6 @@ public class HookController : MonoBehaviour {
             reeling = false;
 
             ReelingFinished?.Invoke();
-            return;
         }
 
         HandleMovement();

@@ -21,12 +21,14 @@ public class HookAnimator : MonoBehaviour {
     }
 
     void Start() {
-
+        _hookController.HookCast += OnHookCast;
+        _hookController.HookLanded += OnHookLanded;
+        Color c = new Color(1f, 1f, 1f, 0f); // set alpha to 0 at start
+        _sprite.color = c;
     }
 
     void Update() {
         if (_hookController.casting) {
-            // float nextY = Mathf.Lerp(_hookController.transform.position.y + yOffset, _hookController.transform.position.y, _hookController.hookCastingTimeElapsed / _hookController.hookCastingTime);
             float nextY = Mathf.SmoothStep(_hookController.transform.position.y + yOffset, _hookController.transform.position.y, _hookController.hookCastingTimeElapsed / _hookController.hookCastingTime);
             transform.position = new Vector2(transform.position.x, nextY);
             return;
@@ -39,4 +41,16 @@ public class HookAnimator : MonoBehaviour {
         }
     }
 
+    void OnHookCast(float hookCastingTime) {
+        spriteFader.StartFade(SpriteFader.Direction.IN, hookCastingTime / 3f);
+    }
+
+    void OnHookLanded() {
+        spriteFader.StartFade(SpriteFader.Direction.OUT, _hookController.hookReelingTime / 1.5f);
+    }
+
+    private void OnDisable() {
+        _hookController.HookCast -= OnHookCast;
+        _hookController.HookLanded -= OnHookLanded;
+    }
 }
