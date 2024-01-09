@@ -13,9 +13,10 @@ public class HookController : MonoBehaviour {
     public SpriteRenderer sprite { get; private set; }
     private Bounds _constraintsArea;
 
-    private bool casting = false;
-    // public bool casting { get; private set; } = false;
-    private bool reeling = false;
+    // private bool casting = false;
+    public bool casting { get; private set; } = false;
+    // private bool reeling = false;
+    public bool reeling { get; private set; } = false;
 
     public event Action<float> HookCast;
     public event Action HookLanded;
