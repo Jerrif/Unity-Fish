@@ -13,11 +13,17 @@ public class HookAnimator : MonoBehaviour {
     private HookController _hookController;
     private SpriteRenderer _sprite;
     private SpriteFader spriteFader;
+    // private Animator splashAnimator;
+    [SerializeField] private Animator splashAnimator;
 
     void Awake() {
         _hookController = GetComponentInParent<HookController>();
         _sprite = GetComponent<SpriteRenderer>();
         spriteFader = gameObject.AddComponent<SpriteFader>();
+        // splashAnimator = GetComponentInChildren<Animator>();
+        if (splashAnimator == null) {
+            print("woah no splahs animtora");
+        }
     }
 
     void Start() {
@@ -47,6 +53,7 @@ public class HookAnimator : MonoBehaviour {
 
     void OnHookLanded() {
         spriteFader.StartFade(SpriteFader.Direction.OUT, _hookController.hookReelingTime / 1.5f);
+        splashAnimator.SetTrigger("HookLandedAnimTrigger");
     }
 
     private void OnDisable() {
