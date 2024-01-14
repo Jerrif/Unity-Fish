@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour {
     [SerializeField] private HookController hookController;
     [SerializeField] private FishSpawner[] fishSpawners;
+    // TODO: hmm where should the responsibility be for making particle effects appear on caught fish?
+    [SerializeField] private ParticleSystem ps;
 
     private List<Fish> aliveFish;
 
@@ -32,6 +34,12 @@ public class GameManager : MonoBehaviour {
         aliveFish = new List<Fish>();
     }
 
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+    }
+
     private void HookLanded() {
         int numCaught = 0;
         Bounds hookBounds = hookController.sprite.bounds;
@@ -47,6 +55,11 @@ public class GameManager : MonoBehaviour {
 
         if (numCaught > 0) {
             foreach (Fish cf in caughtFish) {
+                var emitParams = new ParticleSystem.EmitParams {
+                    applyShapeToPosition = true,
+                    position = cf.transform.position,
+                };
+                ps.Emit(emitParams, 40);
                 aliveFish.Remove(cf);
                 cf.Caught();
             }
