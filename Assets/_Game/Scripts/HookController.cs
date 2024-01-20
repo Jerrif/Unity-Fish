@@ -1,3 +1,7 @@
+// TODO: refactor this to have an empty parent object (transform) to act as the "HookController", then the `HookBox`, `Hook`, and `Splash`
+// can all be child objects (without needing logic scripts?)
+// check this vid for advice: https://www.youtube.com/watch?v=ts24UWC0mY4
+
 using System;
 using UnityEngine;
 

@@ -5,7 +5,7 @@ public class GameManager : MonoBehaviour {
     [SerializeField] private HookController hookController;
     [SerializeField] private FishSpawner[] fishSpawners;
     // TODO: hmm where should the responsibility be for making particle effects appear on caught fish?
-    [SerializeField] private ParticleSystem ps;
+    [SerializeField] private ParticleSystem particleManager;
 
     private List<Fish> aliveFish;
 
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour {
                     applyShapeToPosition = true,
                     position = cf.transform.position,
                 };
-                ps.Emit(emitParams, 40);
+                particleManager.Emit(emitParams, 40);
                 aliveFish.Remove(cf);
                 cf.Caught();
             }
