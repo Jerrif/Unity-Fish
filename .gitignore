@@ -155,3 +155,5 @@ Assets/TextMesh Pro/
 *.anim
 *.controller
 *.preset
+ProjectSettings/CommonBurstAotSettings.json
+ProjectSettings/BurstAotSettings_StandaloneWindows.json
