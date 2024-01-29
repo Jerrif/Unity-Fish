@@ -4,9 +4,13 @@ Shader "Unlit/WaterlineShader"
     {
         // OKAY, so these are kind of like `[SerializeField]`. `Properties` added here show up in the Unity inspector ~on the MATERIAL, not the shader~
         _MainTex ("Texture", 2D) = "white" {}
-        _MaskTex ("Waterline Mask Texture", 2D) = "white" {}
-        // remember, _Color must also be declared in the CGPROGRUM/SulbShadrer
-        _Color("Color", Color) = (1, 1, 1, 1)
+        _MaskTex ("Waterline Mask", 2D) = "white" {}
+        // remember, these properties must also be declared in the CGPROGRUM/SulbShadrer
+        _WaterlineColor ("Waterline Colour", Color) = (143, 234, 244, 1) // these are really good default values
+        _UnderwaterColor ("Underwater Colour", Color) = (31, 143, 171, 1)
+        // honstly, scale & offset are the same as the already-included `Tiling` & `Offset` from a sampler2D
+        _Scale ("X Y Scale", Vector) = (1, 1, 0, 0)
+        _Offset ("X Y Offset", Vector) = (0.5, 0.5, 0, 0)
     }
     SubShader
     {
@@ -14,11 +18,15 @@ Shader "Unlit/WaterlineShader"
         // DisableBatching=true fixes an issue where if you use unity_ObjectToWorld to do stuff based on obj position,
         //      the same value gets applied to all objects that share the same material (this shader)
         Tags { 
-            "RenderType"="Opaque"
+            "RenderType"="Transparent"
             "Queue"="Transparent"
+            "PreviewType"="Plane"
             "DisableBatching" = "True"
         }
         LOD 100
+        Cull Off
+        Lighting Off
+        ZWrite Off
 
         Pass
         {
@@ -36,7 +44,6 @@ Shader "Unlit/WaterlineShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-                float2 uvTwo : TEXCOORD1;
             };
 
             // defines what information we're passing into the fragment function
@@ -44,16 +51,19 @@ Shader "Unlit/WaterlineShader"
             {
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
-                float2 uvTwo : TEXCOORD1;
+                float2 uvMask : TEXCOORD1;
             };
 
             // define `_MainTex` in the scope of our CGPROGRAM (since it's out of scope where you define it right at the top)
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            float4 _Color; // defines the `Property` I added up at the top so it can be used in the frag func
-            float _Tween;
             sampler2D _MaskTex;
             float4 _MaskTex_ST;
+            // defines the `Property` I added up at the top so it can be used in the frag func
+            float4 _WaterlineColor;
+            float4 _UnderwaterColor;
+            float2 _Scale;
+            float2 _Offset;
 
             // takes appdata struct and returns a v2f
             v2f vert (appdata v)
@@ -62,9 +72,13 @@ Shader "Unlit/WaterlineShader"
                 // looks at the position of the vertex on the mesh (typically a vector3)
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 // pass along the uv as-is to the fragment function
-                // dunno what the TRANSFORM_TEX is doing, but this is equivalent to: o.uv = v.uv;
+                // equivalent to: o.uv = v.uv;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.uvTwo = TRANSFORM_TEX(v.uvTwo, _MaskTex);
+
+                // this is what allows the mask texture to remain at 0 rotation, regardless of the main tex
+                float2 maskUV = UnityObjectToWorldDir(v.vertex);
+                o.uvMask = TRANSFORM_TEX(maskUV, _MaskTex);
+                o.uvMask.xy *= _Scale.xy;
                 return o;
             }
 
@@ -72,29 +86,56 @@ Shader "Unlit/WaterlineShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 // get the color value from the texture (_MainTex), at the provided uv value
-                fixed4 c = fixed4(0.0,0.0,0.0,0.0);
+                fixed4 o = fixed4(0, 0, 0, 1);
                 fixed4 col = tex2D(_MainTex, i.uv);
-                fixed4 maskCol = tex2D(_MaskTex, i.uvTwo);
-
+                fixed4 mask = tex2D(_MaskTex, i.uvMask + _Offset);
                 
-                float2 a = step(maskCol.r, i.uv);
+
+                // TODO: WATCH THESE
+                // https://www.youtube.com/@benjaminswee-shaders/videos
 
 
-                c.rgba = col;
-                c.r = step(maskCol.g, maskCol.r);
-                // c.r = i.uv;
-                // c = lerp(col, maskCol, 1.0);
+                // o.rgb = (_UnderwaterColor * mask.g);
+                // o.rgb = step(1, mask.g) + _UnderwaterColor;
+                // o.rgb = step(mask.g, 0) * _UnderwaterColor;
+                // o.rgb += lerp(mask.g, _UnderwaterColor, 0.0);
+                // o.rgb += col.rgb;
+                // o.rgb *= col.rgb;
 
-                // col.rgba += maskCol.rgba;
-                // col.rgb += maskCol.rgb;
-                // col.rgb += maskCol.g;
-                col.r = maskCol.r;
-                col.b = maskCol.g;
-                // return maskCol;
+                // WOOOOW this is how you make the _UnderwaterColor opaque. WTF I even tried something like this earlier!
+                o.rgb = lerp(col.rgb, _UnderwaterColor, mask.g);
+                o.rgb += mask.r * _WaterlineColor;
+
+                // o.rg = mask.rg;
+                // o.rgb = o.rgb + col.rgb;
+                // o.rgb += col.rgb;
+                o.a = col.a;
+
+                return o;
+
+
+
+
+
+
+
+
+
+
+
+                col.rgb += mask.r * _WaterlineColor;
+                col.rgb += mask.g * _UnderwaterColor;
+                // mask = _UnderwaterColor;
                 
-                return c;
-                // return fixed4(0.0, 1.0, 0.0, 1.0);
-                // return col;
+                // col.rgb += (mask.g);
+
+                // col += effect1 * effect1.a * max(bg, _EffectsLayer1Foreground);
+
+                // col.rgb += mask.g * _UnderwaterColor;
+                // col.rgb = mask;
+                // col.rgb += mask.r + mask.b;
+                // col.rgb += mask.g * col.a;
+                return col;
             }
             ENDCG
         }
