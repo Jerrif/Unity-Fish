@@ -7,7 +7,7 @@ Shader "Unlit/WaterlineTestingShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _MaskTex ("Mask Texture", 2D) = "white" {}
-        _WaterlineColor ("Waterline Colour", Color) = (143, 234, 244, 1)
+        _WaterlineColor ("Waterline Colour", Color) = (143, 234, 244, 1) // these are really good default values
         _UnderwaterColor ("Underwater Colour", Color) = (31, 143, 171, 1)
     }
     SubShader
@@ -21,8 +21,8 @@ Shader "Unlit/WaterlineTestingShader"
 
         Pass
         {
-            ZWrite off
-            Cull off
+            // ZWrite off
+            // Cull off
             Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
@@ -47,8 +47,9 @@ Shader "Unlit/WaterlineTestingShader"
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float2 uvMask : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -61,30 +62,44 @@ Shader "Unlit/WaterlineTestingShader"
             v2f vert (appdata v)
             {
                 v2f o;
+
+                float sinX = sin ( 4.0 * _Time );
+                float cosX = cos ( 4.0 * _Time );
+                float sinY = sin ( 4.0 * _Time );
+                float2x2 rotationMatrix = float2x2( cosX, -sinX, sinY, cosX);
+                // float2x2 rotationMatrix = float2x2(1, 0, 0, 1);
+                // v.vertex.xy = mul ( v.vertex.xy, rotationMatrix );
+                
+                float2 testing = UnityObjectToWorldDir(v.vertex);
                 o.vertex = UnityObjectToClipPos(v.vertex);
+                // o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+
+                // o.uv = TRANSFORM_TEX(mul(unity_ObjectToWorld, v.vertex).xy, _MaskTex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                // o.uvTwo = TRANSFORM_TEX(v.uvTwo, _MaskTex);
+                // o.uvMask = TRANSFORM_TEX(mul(unity_ObjectToWorld, (v.vertex + o.uv) * 2-1).xy, _MaskTex);
+                o.uvMask = TRANSFORM_TEX(testing.xy, _MaskTex);
+                // o.uvMask = TRANSFORM_TEX(mul(unity_ObjectToWorld, (v.vertex + o.uv)).xy, _MaskTex);
                 return o;
             }
-
+            
             fixed4 frag (v2f i) : SV_Target
             {
                 half3 s = ObjectScale();
                 float scale = length(unity_ObjectToWorld._m00_m10_m20); // scale x axis (assumes uniform scaling)
-                float2 offset = mul(unity_ObjectToWorld, i.uv * 2 - 1);
+                // float2 offset = mul(unity_ObjectToWorld, i.uv * 2 - 1);
                 // float2 offset = mul(unity_ObjectToWorld, float4(i.uv.xy, 0.0, 0.0) * 2-1);
-                // fixed4 offset = mul(unity_ObjectToWorld, float4(i.vertex.xy, 0.0, 1.0));
+                fixed4 offset = mul(unity_ObjectToWorld, float4(i.vertex.xy, 0.0, 1.0));
                 // float2 offset = i.uv * 2-1;
                 fixed4 col = tex2D(_MainTex, i.uv);
                 // float2 offset = mul(unity_ObjectToWorld, float4(i.uv, 0.0, 0.5) * 2-1);
-                fixed4 mask = tex2D(_MaskTex, i.uv + offset/scale);
-                // fixed4 mask = tex2D(_MaskTex, i.uv + offset/s);
-                // fixed4 mask = tex2D(_MaskTex, i.uv);
+                // fixed4 mask = tex2D(_MaskTex, i.uv + offset/scale);
+                // fixed4 mask = tex2D(_MaskTex, i.uvMask + offset/scale);
+                fixed4 mask = tex2D(_MaskTex, i.uvMask + 0.5);
                 
 
                 // col.rgb += mask.rgb;
                 col.rgb += mask.r * _WaterlineColor;
-                col.rgb += mask.g * _UnderwaterColor;
+                col.rgb += mask.g * (_UnderwaterColor + 0.0);
                 return col;
             }
             ENDCG
