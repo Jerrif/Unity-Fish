@@ -7,7 +7,9 @@ Shader "Unlit/WaterlineShader"
         _MaskTex ("Waterline Mask", 2D) = "white" {}
         // remember, these properties must also be declared in the CGPROGRUM/SulbShadrer
         _WaterlineColor ("Waterline Colour", Color) = (143, 234, 244, 1) // these are really good default values
+        _WaterlineOpacity ("Waterline Opacity", Range(0,1)) = 0
         _UnderwaterColor ("Underwater Colour", Color) = (31, 143, 171, 1)
+        _UnderwaterOpacity ("Underwater Opacity", Range(0,1)) = 1
         // honstly, scale & offset are the same as the already-included `Tiling` & `Offset` from a sampler2D
         _Scale ("X Y Scale", Vector) = (1, 1, 0, 0)
         _Offset ("X Y Offset", Vector) = (0.5, 0.5, 0, 0)
@@ -62,6 +64,8 @@ Shader "Unlit/WaterlineShader"
             // defines the `Property` I added up at the top so it can be used in the frag func
             float4 _WaterlineColor;
             float4 _UnderwaterColor;
+            float _WaterlineOpacity;
+            float _UnderwaterOpacity;
             float2 _Scale;
             float2 _Offset;
 
@@ -103,14 +107,16 @@ Shader "Unlit/WaterlineShader"
                 // o.rgb *= col.rgb;
 
                 // WOOOOW this is how you make the _UnderwaterColor opaque. WTF I even tried something like this earlier!
-                o.rgb = lerp(col.rgb, _UnderwaterColor, mask.g);
-                o.rgb += mask.r * _WaterlineColor;
+                col.rgb = lerp(col.rgb, _UnderwaterColor, mask.g * _UnderwaterOpacity);
+                col.rgb = lerp(col.rgb, _WaterlineColor, mask.r * _WaterlineOpacity);
+                col.rgb += mask.r * _WaterlineColor;
 
                 // o.rg = mask.rg;
                 // o.rgb = o.rgb + col.rgb;
                 // o.rgb += col.rgb;
-                o.a = col.a;
+                // o.a = col.a;
 
+                return col;
                 return o;
 
 
