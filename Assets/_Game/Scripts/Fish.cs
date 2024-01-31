@@ -7,6 +7,7 @@ public class Fish : MonoBehaviour {
     private float distanceToTravel = 15f;
 
     private Vector2 startPos;
+    private int moveDirection = 1;
     public SpriteRenderer sprite { get; private set; }
     private SpriteFader spriteFader;
     private bool markedForDeath = false;
@@ -23,10 +24,19 @@ public class Fish : MonoBehaviour {
     }
 
     private void Update() {
-        transform.position += Vector3.left * Time.deltaTime * speed;
+        transform.position += Vector3.left * moveDirection * Time.deltaTime * speed;
         if (!markedForDeath && distanceTravelled() >= distanceToTravel) {
             MarkForDeath();
         }
+    }
+
+    // public void setDirection(int direction) {
+    public void setDirection(int direction) {
+        /// -1 is right, 1 is left
+        // TODO: maybe make `DIRECTION` an enum? idk if it's reeeeeally necessary though
+        moveDirection = direction;
+        transform.rotation = Quaternion.Euler(0f, 0f, 45f * direction);
+        sprite.flipX = direction == 1;
     }
 
     public float distanceTravelled() {

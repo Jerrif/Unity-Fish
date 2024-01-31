@@ -8,6 +8,7 @@ public class FishSpawner : MonoBehaviour {
     [SerializeField] private Fish[] fishPrefabs;
     // [SerializeField] private int spawnsPerWave = 3;
     [SerializeField] private float secondsBetweenSpawns = 1f;
+    [SerializeField] private bool moveLeft = true;
 
     public event Action<Fish> spawned;
 
@@ -37,6 +38,10 @@ public class FishSpawner : MonoBehaviour {
         var fishToSpawn = fishPrefabs[UnityEngine.Random.Range(0, fishPrefabs.Length)];
         Vector2 point = new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
         Fish newFish = Instantiate(fishToSpawn, point, Quaternion.identity);
+
+        // TODO: maybe make `DIRECTION` an enum? idk if it's reeeeeally necessary though
+        newFish.setDirection(1);
+
         spawned?.Invoke(newFish);
     }
 
