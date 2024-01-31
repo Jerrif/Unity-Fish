@@ -52,6 +52,10 @@
 // https://discussions.unity.com/t/my-shader-doesnt-work-if-i-use-the-same-material-for-multiple-objects-with-the-same-texture/247112
 // https://www.youtube.com/watch?v=qGppGvgw7Dg
 
+// More interesting beginner shader tutorials/breakdowns
+// `Benjamin Swee Shader Videos`
+// https://www.youtube.com/@benjaminswee-shaders/videos
+
 // more stuff for later:
 
 // Script composition / architecture:
