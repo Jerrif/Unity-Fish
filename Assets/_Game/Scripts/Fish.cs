@@ -20,7 +20,7 @@ public class Fish : MonoBehaviour {
 
     private void Start() {
         startPos = transform.position;
-        spriteFader.StartFade(FADE_DIRECTION.IN, 1f);
+        spriteFader.StartFade(FADE_DIRECTION.IN, 2f);
     }
 
     private void Update() {
@@ -43,7 +43,7 @@ public class Fish : MonoBehaviour {
 
     private void MarkForDeath() {
         markedForDeath = true;
-        spriteFader.StartFade(FADE_DIRECTION.OUT, 1f);
+        spriteFader.StartFade(FADE_DIRECTION.OUT, 2f);
         spriteFader.fadeComplete += DiedOfNaturalCauses;
     }
 

@@ -9,6 +9,7 @@ public class FishSpawner : MonoBehaviour {
     // [SerializeField] private int spawnsPerWave = 3;
     [SerializeField] private float secondsBetweenSpawns = 1f;
     [SerializeField] private DIRECTION direction = DIRECTION.RIGHT;
+    private float spawnTimer = 0f;
 
     public event Action<Fish> spawned;
 
@@ -18,20 +19,42 @@ public class FishSpawner : MonoBehaviour {
     private float yMax;
 
     // `yield return new` requires the `IEnumerator` return type
-    private IEnumerator Start() {
+    // private IEnumerator Start() {
+    private void Start() {
 
         xMin = transform.position.x - spawnAreaSize.x / 2;
         xMax = transform.position.x + spawnAreaSize.x / 2;
         yMin = transform.position.y - spawnAreaSize.y / 2;
         yMax = transform.position.y + spawnAreaSize.y / 2;
 
-        for (int i = 0; i <= 5; i++) {
-            SpawnFish();
-            yield return new WaitForSeconds(0.1f);
-        }
+        // for (int i = 0; i <= 5; i++) {
+        //     SpawnFish();
+        //     yield return new WaitForSeconds(0.1f);
+        // }
+
+        // for (int i = 0; i <= 5; i++) {
+        //     SpawnFish();
+        // }
+        SpawnFishGroup(5);
 
         // BUG: with this method, the spawn rate can't be changed from the editor, while in play
-        InvokeRepeating(nameof(SpawnFish), secondsBetweenSpawns, secondsBetweenSpawns);
+        // InvokeRepeating(nameof(SpawnFish), secondsBetweenSpawns, secondsBetweenSpawns);
+
+    }
+
+    private void Update() {
+        if (spawnTimer < secondsBetweenSpawns) {
+            spawnTimer += Time.deltaTime;
+        } else {
+            spawnTimer = 0f;
+            SpawnFishGroup(4);
+        }
+    }
+
+    private void SpawnFishGroup(int count) {
+        for (int i=0; i < count; i++) {
+            SpawnFish();
+        }
     }
 
     private void SpawnFish() {
