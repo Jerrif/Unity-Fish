@@ -20,7 +20,7 @@ public class Fish : MonoBehaviour {
 
     private void Start() {
         startPos = transform.position;
-        spriteFader.StartFade(SpriteFader.Direction.IN, 1f);
+        spriteFader.StartFade(FADE_DIRECTION.IN, 1f);
     }
 
     private void Update() {
@@ -30,13 +30,11 @@ public class Fish : MonoBehaviour {
         }
     }
 
-    // public void setDirection(int direction) {
-    public void setDirection(int direction) {
+    public void setDirection(DIRECTION direction) {
         /// -1 is right, 1 is left
-        // TODO: maybe make `DIRECTION` an enum? idk if it's reeeeeally necessary though
-        moveDirection = direction;
-        transform.rotation = Quaternion.Euler(0f, 0f, 45f * direction);
-        sprite.flipX = direction == 1;
+        moveDirection = (int)direction;
+        transform.rotation = Quaternion.Euler(0f, 0f, 45f * moveDirection);
+        sprite.flipX = moveDirection == 1;
     }
 
     public float distanceTravelled() {
@@ -45,7 +43,7 @@ public class Fish : MonoBehaviour {
 
     private void MarkForDeath() {
         markedForDeath = true;
-        spriteFader.StartFade(SpriteFader.Direction.OUT, 1f);
+        spriteFader.StartFade(FADE_DIRECTION.OUT, 1f);
         spriteFader.fadeComplete += DiedOfNaturalCauses;
     }
 

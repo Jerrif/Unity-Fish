@@ -27,7 +27,7 @@ public class SpriteFader : MonoBehaviour {
     // TODO: could just modify this to be like
     // StartFade(float from, float to, float fadeDuration)
     // so you're not locked to 0 or 100% alpha
-    public void StartFade(Direction direction, float duration) {
+    public void StartFade(FADE_DIRECTION direction, float duration) {
         desiredAlpha = (float)direction;
         startAlpha = ((int)direction) ^ 1;
         fadeDuration = duration;
@@ -51,8 +51,4 @@ public class SpriteFader : MonoBehaviour {
         progress += Time.deltaTime;
     }
 
-    public enum Direction : ushort {
-        IN = 1,
-        OUT = 0
-    }
 }

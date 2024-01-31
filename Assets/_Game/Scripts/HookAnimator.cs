@@ -48,11 +48,11 @@ public class HookAnimator : MonoBehaviour {
     }
 
     void OnHookCast(float hookCastingTime) {
-        spriteFader.StartFade(SpriteFader.Direction.IN, hookCastingTime / 3f);
+        spriteFader.StartFade(FADE_DIRECTION.IN, hookCastingTime / 3f);
     }
 
     void OnHookLanded() {
-        spriteFader.StartFade(SpriteFader.Direction.OUT, _hookController.hookReelingTime / 1.5f);
+        spriteFader.StartFade(FADE_DIRECTION.OUT, _hookController.hookReelingTime / 1.5f);
         splashAnimator.SetTrigger("HookLandedAnimTrigger");
     }
 

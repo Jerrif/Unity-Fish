@@ -8,7 +8,7 @@ public class FishSpawner : MonoBehaviour {
     [SerializeField] private Fish[] fishPrefabs;
     // [SerializeField] private int spawnsPerWave = 3;
     [SerializeField] private float secondsBetweenSpawns = 1f;
-    [SerializeField] private bool moveLeft = true;
+    [SerializeField] private DIRECTION direction = DIRECTION.RIGHT;
 
     public event Action<Fish> spawned;
 
@@ -40,7 +40,7 @@ public class FishSpawner : MonoBehaviour {
         Fish newFish = Instantiate(fishToSpawn, point, Quaternion.identity);
 
         // TODO: maybe make `DIRECTION` an enum? idk if it's reeeeeally necessary though
-        newFish.setDirection(1);
+        newFish.setDirection(direction);
 
         spawned?.Invoke(newFish);
     }
