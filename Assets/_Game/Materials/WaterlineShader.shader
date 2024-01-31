@@ -93,54 +93,17 @@ Shader "Unlit/WaterlineShader"
                 fixed4 o = fixed4(0, 0, 0, 1);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 mask = tex2D(_MaskTex, i.uvMask + _Offset);
-                
-
-                // TODO: WATCH THESE
-                // https://www.youtube.com/@benjaminswee-shaders/videos
-
-
-                // o.rgb = (_UnderwaterColor * mask.g);
-                // o.rgb = step(1, mask.g) + _UnderwaterColor;
-                // o.rgb = step(mask.g, 0) * _UnderwaterColor;
-                // o.rgb += lerp(mask.g, _UnderwaterColor, 0.0);
-                // o.rgb += col.rgb;
-                // o.rgb *= col.rgb;
 
                 // WOOOOW this is how you make the _UnderwaterColor opaque. WTF I even tried something like this earlier!
                 col.rgb = lerp(col.rgb, _UnderwaterColor, mask.g * _UnderwaterOpacity);
                 col.rgb = lerp(col.rgb, _WaterlineColor, mask.r * _WaterlineOpacity);
                 col.rgb += mask.r * _WaterlineColor;
 
-                // o.rg = mask.rg;
-                // o.rgb = o.rgb + col.rgb;
-                // o.rgb += col.rgb;
-                // o.a = col.a;
-
-                return col;
-                return o;
-
-
-
-
-
-
-
-
-
-
-
-                col.rgb += mask.r * _WaterlineColor;
-                col.rgb += mask.g * _UnderwaterColor;
-                // mask = _UnderwaterColor;
-                
-                // col.rgb += (mask.g);
-
-                // col += effect1 * effect1.a * max(bg, _EffectsLayer1Foreground);
-
+                // NOTE: this is how I did it before; it lightens the colour of the under/water, and is transparent.
+                // I don't know how transparent it is (50%?), but it does look really nice too. Not sure which is better
+                // col.rgb += mask.r * _WaterlineColor;
                 // col.rgb += mask.g * _UnderwaterColor;
-                // col.rgb = mask;
-                // col.rgb += mask.r + mask.b;
-                // col.rgb += mask.g * col.a;
+
                 return col;
             }
             ENDCG

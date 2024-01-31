@@ -21,8 +21,8 @@ Shader "Unlit/WaterlineTestingShader"
 
         Pass
         {
-            // ZWrite off
-            // Cull off
+            ZWrite off
+            Cull off
             Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
