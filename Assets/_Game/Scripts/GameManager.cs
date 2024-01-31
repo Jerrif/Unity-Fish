@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void Start() {
+    private void Awake() {
         aliveFish = new List<Fish>();
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.spawned += FishSpawned;
