@@ -46,6 +46,7 @@ Shader "Unlit/WaterlineShader"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float4 sr_color : COLOR0; // the `Color` property from the `SpriteRenderer` component. I added this
             };
 
             // defines what information we're passing into the fragment function
@@ -54,6 +55,7 @@ Shader "Unlit/WaterlineShader"
                 float4 vertex : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 float2 uvMask : TEXCOORD1;
+                float4 sr_color : COLOR0;
             };
 
             // define `_MainTex` in the scope of our CGPROGRAM (since it's out of scope where you define it right at the top)
@@ -78,6 +80,7 @@ Shader "Unlit/WaterlineShader"
                 // pass along the uv as-is to the fragment function
                 // equivalent to: o.uv = v.uv;
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.sr_color = v.sr_color;
 
                 // this is what allows the mask texture to remain at 0 rotation, regardless of the main tex
                 float2 maskUV = UnityObjectToWorldDir(v.vertex);
@@ -90,14 +93,15 @@ Shader "Unlit/WaterlineShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 // get the color value from the texture (_MainTex), at the provided uv value
-                fixed4 o = fixed4(0, 0, 0, 1);
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed4 mask = tex2D(_MaskTex, i.uvMask + _Offset);
 
                 // WOOOOW this is how you make the _UnderwaterColor opaque. WTF I even tried something like this earlier!
-                col.rgb = lerp(col.rgb, _UnderwaterColor, mask.g * _UnderwaterOpacity);
-                col.rgb = lerp(col.rgb, _WaterlineColor, mask.r * _WaterlineOpacity);
-                col.rgb += mask.r * _WaterlineColor;
+                col.rgb = lerp(col.rgb, _UnderwaterColor.rgb, mask.g * _UnderwaterOpacity);
+                col.rgb = lerp(col.rgb, _WaterlineColor.rgb, mask.r * _WaterlineOpacity);
+                col.rgb += mask.r * _WaterlineColor.rgb;
+                // set the final alpha to include the `SpriteRenderer`s `Color` property. W/o this, it ignores that property
+                col.a *= i.sr_color.a;
 
                 // NOTE: this is how I did it before; it lightens the colour of the under/water, and is transparent.
                 // I don't know how transparent it is (50%?), but it does look really nice too. Not sure which is better
