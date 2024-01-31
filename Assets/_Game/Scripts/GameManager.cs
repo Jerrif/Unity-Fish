@@ -17,9 +17,6 @@ public class GameManager : MonoBehaviour {
         // "hook" up (hehe) the HookLanded event from hookController to a function in here
         hookController.HookLanded += HookLanded;
 
-        foreach (FishSpawner fishSpawner in fishSpawners) {
-            fishSpawner.spawned += FishSpawned;
-        }
     }
 
     private void OnDisable() {
@@ -32,6 +29,9 @@ public class GameManager : MonoBehaviour {
 
     private void Start() {
         aliveFish = new List<Fish>();
+        foreach (FishSpawner fishSpawner in fishSpawners) {
+            fishSpawner.spawned += FishSpawned;
+        }
     }
 
     private void Update() {
