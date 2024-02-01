@@ -1,13 +1,13 @@
 using UnityEngine;
-using System.Collections;
 using System;
 
 public class FishSpawner : MonoBehaviour {
 
     [SerializeField] private Vector2 spawnAreaSize;
     [SerializeField] private Fish[] fishPrefabs;
-    // [SerializeField] private int spawnsPerWave = 3;
-    [SerializeField] private float secondsBetweenSpawns = 1f;
+    [SerializeField] private int spawnsPerWave = 4;
+    [SerializeField] private float secondsBetweenSpawns = 3.5f;
+    [SerializeField] private float randomSpawnVariation = 1.0f;
     [SerializeField] private DIRECTION direction = DIRECTION.RIGHT;
     private float spawnTimer = 0f;
 
@@ -18,8 +18,6 @@ public class FishSpawner : MonoBehaviour {
     private float yMin;
     private float yMax;
 
-    // `yield return new` requires the `IEnumerator` return type
-    // private IEnumerator Start() {
     private void Start() {
 
         xMin = transform.position.x - spawnAreaSize.x / 2;
@@ -27,42 +25,30 @@ public class FishSpawner : MonoBehaviour {
         yMin = transform.position.y - spawnAreaSize.y / 2;
         yMax = transform.position.y + spawnAreaSize.y / 2;
 
-        // for (int i = 0; i <= 5; i++) {
-        //     SpawnFish();
-        //     yield return new WaitForSeconds(0.1f);
-        // }
-
-        // for (int i = 0; i <= 5; i++) {
-        //     SpawnFish();
-        // }
-        SpawnFishGroup(5);
-
-        // BUG: with this method, the spawn rate can't be changed from the editor, while in play
-        // InvokeRepeating(nameof(SpawnFish), secondsBetweenSpawns, secondsBetweenSpawns);
-
+        SpawnFishGroup(spawnsPerWave);
     }
 
     private void Update() {
         if (spawnTimer < secondsBetweenSpawns) {
             spawnTimer += Time.deltaTime;
         } else {
-            spawnTimer = 0f;
-            SpawnFishGroup(4);
+            spawnTimer = 0f + UnityEngine.Random.Range(-randomSpawnVariation, randomSpawnVariation);
+            SpawnFishGroup(spawnsPerWave);
         }
     }
 
     private void SpawnFishGroup(int count) {
+        Vector2 spawnPoint = new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
         for (int i=0; i < count; i++) {
-            SpawnFish();
+            float variation = UnityEngine.Random.Range(-1f, 1f);
+            SpawnFish(new Vector2(spawnPoint.x + variation, spawnPoint.y + variation));
         }
     }
 
-    private void SpawnFish() {
+    private void SpawnFish(Vector2 spawnPoint) {
         var fishToSpawn = fishPrefabs[UnityEngine.Random.Range(0, fishPrefabs.Length)];
-        Vector2 point = new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
-        Fish newFish = Instantiate(fishToSpawn, point, Quaternion.identity);
+        Fish newFish = Instantiate(fishToSpawn, spawnPoint, Quaternion.identity);
 
-        // TODO: maybe make `DIRECTION` an enum? idk if it's reeeeeally necessary though
         newFish.setDirection(direction);
 
         spawned?.Invoke(newFish);
