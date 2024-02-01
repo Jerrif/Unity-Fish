@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class Fish : MonoBehaviour {
     [SerializeField] private float speed = 1f;
+    private float randomSpeedVariance = 0.50f;
     [SerializeField] private bool showHitbox = false;
-    private float distanceToTravel = 15f;
+    private float distanceToTravel = 14f;
 
     private Vector2 startPos;
     private int moveDirection = 1;
@@ -20,10 +21,15 @@ public class Fish : MonoBehaviour {
 
     private void Start() {
         startPos = transform.position;
+        speed += UnityEngine.Random.Range(0f, speed * randomSpeedVariance);
         spriteFader.StartFade(FADE_DIRECTION.IN, 2f);
     }
 
     private void Update() {
+        if (markedForDeath) {
+            // slow down while fading away TODO: slow down the sine movement as well
+            speed = Mathf.Lerp(speed, 0, 1f * Time.deltaTime);
+        }
         transform.position += Vector3.left * moveDirection * Time.deltaTime * speed;
         if (!markedForDeath && distanceTravelled() >= distanceToTravel) {
             MarkForDeath();
