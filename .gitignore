@@ -157,3 +157,5 @@ Assets/TextMesh Pro/
 *.preset
 ProjectSettings/CommonBurstAotSettings.json
 ProjectSettings/BurstAotSettings_StandaloneWindows.json
+*.ttf
+*.otf

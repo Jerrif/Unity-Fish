@@ -60,6 +60,7 @@ public class Fish : MonoBehaviour {
     }
 
     public void Caught() {
+        // NOTE: TODO: RESEARCH: currently this gets called by the `GameManager` when a fish is caught. Dunno if that's a bad way to do it.
         Destroy(gameObject);
     }
 

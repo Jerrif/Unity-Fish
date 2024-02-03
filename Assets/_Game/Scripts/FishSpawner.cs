@@ -38,6 +38,7 @@ public class FishSpawner : MonoBehaviour {
     }
 
     private void SpawnFishGroup(int count) {
+        // TODO: surely I can simplify this, and get rid of the 8 lines(!) of caching `xMin` `xMax` etc
         Vector2 spawnPoint = new Vector2(UnityEngine.Random.Range(xMin, xMax), UnityEngine.Random.Range(yMin, yMax));
         for (int i=0; i < count; i++) {
             float variation = UnityEngine.Random.Range(-1f, 1f);

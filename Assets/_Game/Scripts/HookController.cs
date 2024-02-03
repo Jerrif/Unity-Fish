@@ -24,7 +24,7 @@ public class HookController : MonoBehaviour {
 
     public event Action<float> HookCast;
     public event Action HookLanded;
-    public event Action ReelingFinished;
+    // public event Action ReelingFinished;
 
     private void Awake() {
        if (!hookConstraints) {
@@ -57,7 +57,7 @@ public class HookController : MonoBehaviour {
             hookReelingTimeElapsed = 0f;
             reeling = false;
 
-            ReelingFinished?.Invoke();
+            // ReelingFinished?.Invoke();
         }
 
         HandleMovement();

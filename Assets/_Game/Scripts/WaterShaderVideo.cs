@@ -32,6 +32,13 @@
 // random gamedev stuff (check it out):
 // https://www.youtube.com/c/Imphenzia
 
+// really good UI tutorial (for a start menu)
+// `How to make a menu in Unity - UI Tutorial (Tarodev)`
+// https://www.youtube.com/watch?v=lF26yGJbsQk
+
+// another (long) tarodev UI tutorial
+// `UI Toolkit Primer - Build UIs like a Programmer (Tarodev)`
+// https://www.youtube.com/watch?v=I1JcytXwXM4
 
 // scriptable objects (haven't watched yet)
 // `GameDev Architecture - Scriptable Object Event System - Unity - Part 1`
