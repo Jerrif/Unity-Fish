@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -9,6 +10,13 @@ public class GameManager : MonoBehaviour {
 
     private List<Fish> aliveFish;
 
+    // RESEARCH: this could be an event, or it could just have a reference to the scoreboard?
+    // testing out a `static` event. The subscribing object (`ScoreManager`) doesn't need a reference to `GameManager` now.
+    public static event Action<int> fishCaughtEvent;
+    // this one's basically a long-ass signal relay: `Fish` -> `FishSpawner` -> `GameManager` (here) -> `ScoreManager`
+    // maybe that's really dumb. Could just use a static event right on the Fish?
+    public static event Action fishDiedOfNaturalCausesEvent;
+
     private void OnEnable() {
         if (hookController == null || fishSpawners.Length == 0) {
             Debug.LogError("woah gotta hook up the hook controller & fish spawners to the game manager");
@@ -16,7 +24,6 @@ public class GameManager : MonoBehaviour {
         }
         // "hook" up (hehe) the HookLanded event from hookController to a function in here
         hookController.HookLanded += HookLanded;
-
     }
 
     private void OnDisable() {
@@ -63,7 +70,7 @@ public class GameManager : MonoBehaviour {
                 aliveFish.Remove(cf);
                 cf.Caught();
             }
-            print("Wow caught " + numCaught + " fish!");
+            fishCaughtEvent?.Invoke(numCaught);
         }
     }
 
@@ -75,5 +82,6 @@ public class GameManager : MonoBehaviour {
     private void FishDied(Fish dedFish) {
         aliveFish.Remove(dedFish);
         dedFish.diedOfNaturalCauses -= FishDied;
+        fishDiedOfNaturalCausesEvent?.Invoke();
     }
 }
