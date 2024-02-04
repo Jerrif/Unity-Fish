@@ -19,6 +19,6 @@ public class ClickyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     public void IWasClicked() {
-        print("Play clicked");
+        SceneSystem.Instance.LoadNextScene();
     }
 }
