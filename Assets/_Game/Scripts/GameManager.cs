@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour {
     // TODO: hmm where should the responsibility be for making particle effects appear on caught fish?
     [SerializeField] private ParticleSystem particleManager;
 
+    [SerializeField] float gameLength = 60f;
+    [SerializeField] Timer timer;
+
     private List<Fish> aliveFish;
 
     // RESEARCH: this could be an event, or it could just have a reference to the scoreboard?
@@ -39,12 +42,22 @@ public class GameManager : MonoBehaviour {
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.spawned += FishSpawned;
         }
+        timer.timerExpired += TimeIsUp;
+    }
+
+    private void Start() {
+        timer.StartTimer(gameLength);
     }
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             UnityEditor.EditorApplication.isPlaying = false;
         }
+    }
+
+    private void TimeIsUp() {
+        print("waow time is up");
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 
     private void HookLanded() {
