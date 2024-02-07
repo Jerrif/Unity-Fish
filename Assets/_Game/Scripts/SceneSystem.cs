@@ -25,6 +25,13 @@ public class SceneSystem : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void LoadScene(int indexToLoad) {
+        if (indexToLoad == SceneManager.GetActiveScene().buildIndex) {
+            return;
+        }
+        SceneManager.LoadScene(indexToLoad);
+    }
+
     /* watch these vids:
     https://www.youtube.com/watch?v=zObWVOv1GlE
     https://www.youtube.com/watch?v=4I0vonyqMi8&t=79s

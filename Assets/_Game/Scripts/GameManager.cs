@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour {
 
     private void TimeIsUp() {
         print("waow time is up");
-        UnityEditor.EditorApplication.isPlaying = false;
+        SceneSystem.Instance.LoadScene(0);
     }
 
     private void HookLanded() {
