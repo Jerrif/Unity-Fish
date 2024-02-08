@@ -9,26 +9,26 @@ public class ScoreManager : MonoBehaviour {
 
     void Start() {
         // just testing out static events.
-        FishManager.fishCaughtEvent += IncreaseScore;
-        FishManager.fishDiedOfNaturalCausesEvent += IncreaseMisses;
+        FishManager.fishCaughtEvent += IncrementScore;
+        FishManager.fishDiedOfNaturalCausesEvent += IncrementMisses;
         scoreDisplay.SetText("0");
         missesDisplay.SetText("0");
     }
 
     void OnDisable() {
-        FishManager.fishCaughtEvent -= IncreaseScore;
-        FishManager.fishDiedOfNaturalCausesEvent += IncreaseMisses;
+        FishManager.fishCaughtEvent -= IncrementScore;
+        FishManager.fishDiedOfNaturalCausesEvent += IncrementMisses;
     }
 
     void Update() {
     }
 
-    void IncreaseScore(int amount) {
+    void IncrementScore(int amount) {
         score += amount;
         scoreDisplay.SetText(score.ToString());
     }
 
-    void IncreaseMisses() {
+    void IncrementMisses() {
         misses++;
         missesDisplay.SetText(misses.ToString());
     }

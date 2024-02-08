@@ -11,7 +11,7 @@ public class FishManager : MonoBehaviour {
     private List<Fish> aliveFish;
 
     // RESEARCH: this could be an event, or it could just have a reference to the scoreboard?
-    // testing out a `static` event. The subscribing object (`ScoreManager`) doesn't need a reference to `GameManager` now.
+    // testing out a `static` event. The subscribing object (`ScoreManager`) doesn't need a reference to `FishManager` now.
     public static event Action<int> fishCaughtEvent;
     // this one's basically a long-ass signal relay: `Fish` -> `FishSpawner` -> `FishManager` (here) -> `ScoreManager`
     // maybe that's really dumb. Could just use a static event right on the Fish?

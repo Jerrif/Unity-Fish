@@ -18,6 +18,7 @@ public class ClickyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         // _source.PlayOneShot(_uncompressClip);
     }
 
+    // TODO: yeah, this needs to be changed. These scene should be changed from a GameManager / UIManager?
     public void IWasClicked() {
         SceneSystem.Instance.LoadNextScene();
     }
