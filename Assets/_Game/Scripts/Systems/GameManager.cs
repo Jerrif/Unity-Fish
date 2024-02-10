@@ -7,13 +7,13 @@ public class GameManager : MonoBehaviour {
     [SerializeField] float gameLength = 60f;
     // [SerializeField] Timer timer;
 
-    public GameState state;
+    public GameState state = GameState.NONE;
     public static event Action<GameState> gameStateChanged;
 
     private void Awake() {
         if (Instance == null) {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         } else {
             Destroy(gameObject);
         }
@@ -62,5 +62,6 @@ public enum GameState {
     GAME_START,
     PAUSED,
     SETTINGS_MENU,
-    GAME_OVER
+    GAME_OVER,
+    NONE
 }

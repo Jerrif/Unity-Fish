@@ -8,9 +8,24 @@ public class SceneSystem : MonoBehaviour {
         // standard Unity Singleton boilerplate
         if (Instance == null) {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         } else {
             Destroy(gameObject);
+        }
+
+        GameManager.gameStateChanged += OnGameStateChanged;
+    }
+
+    private void Start() {
+    }
+
+    private void OnDisable() {
+        GameManager.gameStateChanged -= OnGameStateChanged;
+    }
+
+    private void OnGameStateChanged(GameState newState) {
+        if (newState == GameState.MAIN_MENU) {
+            LoadScene(0);
         }
     }
 
