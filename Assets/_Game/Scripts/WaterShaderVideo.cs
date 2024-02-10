@@ -63,6 +63,13 @@
 // `Benjamin Swee Shader Videos`
 // https://www.youtube.com/@benjaminswee-shaders/videos
 
+// More shaders (maybe really good?)
+// https://mini.gmshaders.com/
+
+// read:
+// https://caseymuratori.com/blog_0015
+// https://www.cs.utexas.edu/users/EWD/transcriptions/EWD10xx/EWD1011.html
+
 // more stuff for later:
 
 // Script composition / architecture:
