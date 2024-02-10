@@ -1,18 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneSystem : MonoBehaviour {
-    public static SceneSystem Instance;
+public class SceneSystem : Singleton<SceneSystem> {
 
-    void Awake() {
-        // standard Unity Singleton boilerplate
-        if (Instance == null) {
-            Instance = this;
-            // DontDestroyOnLoad(gameObject);
-        } else {
-            Destroy(gameObject);
-        }
-
+    private void OnEnable() {
         GameManager.gameStateChanged += OnGameStateChanged;
     }
 

@@ -1,22 +1,14 @@
 using System;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
-    public static GameManager Instance;
-
+public class GameManager : Singleton<GameManager> {
     [SerializeField] float gameLength = 60f;
     // [SerializeField] Timer timer;
 
     public GameState state = GameState.NONE;
     public static event Action<GameState> gameStateChanged;
 
-    private void Awake() {
-        if (Instance == null) {
-            Instance = this;
-            // DontDestroyOnLoad(gameObject);
-        } else {
-            Destroy(gameObject);
-        }
+    private void OnEnable() {
         // timer.timerExpired += TimeIsUp;
     }
 
