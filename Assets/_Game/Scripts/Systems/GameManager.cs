@@ -19,7 +19,8 @@ public class GameManager : Singleton<GameManager> {
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            UnityEditor.EditorApplication.isPlaying = false;
+            // UnityEditor.EditorApplication.isPlaying = false;
+            UpdateGameState(GameState.MAIN_MENU);
         }
     }
 

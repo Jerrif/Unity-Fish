@@ -20,6 +20,8 @@ public class ClickyButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     // TODO: yeah, this needs to be changed. These scene should be changed from a GameManager / UIManager?
     public void IWasClicked() {
+        // probably not how it's done? idk, just testing for now
+        GameManager.Instance.UpdateGameState(GameState.GAME_START);
         SceneSystem.Instance.LoadNextScene();
     }
 }

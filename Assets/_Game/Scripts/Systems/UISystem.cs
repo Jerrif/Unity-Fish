@@ -1,8 +1,10 @@
 using UnityEngine;
 
 public class UISystem : MonoBehaviour {
+    [SerializeField] private GameObject mainMenuPanel;
+    [SerializeField] private ClickyButton button;
 
-    private void Awake() {
+    private void OnEnable() {
         GameManager.gameStateChanged += OnGameStateChanged;
     }
 
