@@ -17,9 +17,7 @@ public class HookController : MonoBehaviour {
     public SpriteRenderer sprite { get; private set; }
     private Bounds _constraintsArea;
 
-    // private bool casting = false;
     public bool casting { get; private set; } = false;
-    // private bool reeling = false;
     public bool reeling { get; private set; } = false;
 
     public event Action<float> HookCast;
@@ -32,6 +30,13 @@ public class HookController : MonoBehaviour {
        }
         sprite = GetComponent<SpriteRenderer>();
         _constraintsArea = hookConstraints.GetComponent<SpriteRenderer>().bounds;
+    }
+
+    private void OnEnable() {
+        hookCastingTimeElapsed = 0f;
+        hookReelingTimeElapsed = 0f;
+        casting = false;
+        reeling = false;
     }
 
     private void Update() {

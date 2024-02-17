@@ -13,17 +13,16 @@ public class HookAnimator : MonoBehaviour {
     private HookController _hookController;
     private SpriteRenderer _sprite;
     private SpriteFader spriteFader;
-    // private Animator splashAnimator;
     [SerializeField] private Animator splashAnimator;
 
     private void Awake() {
         _hookController = GetComponentInParent<HookController>();
         _sprite = GetComponent<SpriteRenderer>();
         spriteFader = gameObject.AddComponent<SpriteFader>();
-        // splashAnimator = GetComponentInChildren<Animator>();
         if (splashAnimator == null) {
             print("woah no splahs animtora");
         }
+        splashAnimator.keepAnimatorStateOnDisable = true;
     }
 
     private void OnEnable() {
@@ -31,8 +30,7 @@ public class HookAnimator : MonoBehaviour {
         _hookController.HookLanded += OnHookLanded;
         Color c = new Color(1f, 1f, 1f, 0f); // set alpha to 0 at start
         _sprite.color = c;
-        // BUG: if game exited while hook is mid-way through casting, upon new game startup, it continues from where it left off
-        // TODO: so init this back to 0 alpha & starting pos etc
+        transform.position = new Vector2(transform.position.x, transform.position.y + yOffset);
     }
 
     private void Update() {
@@ -61,5 +59,6 @@ public class HookAnimator : MonoBehaviour {
     private void OnDisable() {
         _hookController.HookCast -= OnHookCast;
         _hookController.HookLanded -= OnHookLanded;
+        splashAnimator.Play("Idle", 0, 0f);
     }
 }
