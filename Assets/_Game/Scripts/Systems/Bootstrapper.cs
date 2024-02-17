@@ -3,9 +3,13 @@
 // I don't love doing it this way (seems a little over complex?), but I think Unity is just shit in this regard,
 // and maybe this is just the least annoying way to do it.
 
-using UnityEngine;
 
-public static class Bootstrapper {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    public static void Execute() => Object.DontDestroyOnLoad(Object.Instantiate(Resources.Load("Systems")));
-}
+
+// NOTE: I think I don't need this anymore, since I moved back to just having one scene?
+
+// using UnityEngine;
+
+// public static class Bootstrapper {
+//     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+//     public static void Execute() => Object.DontDestroyOnLoad(Object.Instantiate(Resources.Load("Systems")));
+// }

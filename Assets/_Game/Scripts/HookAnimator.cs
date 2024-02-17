@@ -16,7 +16,7 @@ public class HookAnimator : MonoBehaviour {
     // private Animator splashAnimator;
     [SerializeField] private Animator splashAnimator;
 
-    void Awake() {
+    private void Awake() {
         _hookController = GetComponentInParent<HookController>();
         _sprite = GetComponent<SpriteRenderer>();
         spriteFader = gameObject.AddComponent<SpriteFader>();
@@ -26,14 +26,16 @@ public class HookAnimator : MonoBehaviour {
         }
     }
 
-    void Start() {
+    private void OnEnable() {
         _hookController.HookCast += OnHookCast;
         _hookController.HookLanded += OnHookLanded;
         Color c = new Color(1f, 1f, 1f, 0f); // set alpha to 0 at start
         _sprite.color = c;
+        // BUG: if game exited while hook is mid-way through casting, upon new game startup, it continues from where it left off
+        // TODO: so init this back to 0 alpha & starting pos etc
     }
 
-    void Update() {
+    private void Update() {
         if (_hookController.casting) {
             float nextY = Mathf.SmoothStep(_hookController.transform.position.y + yOffset, _hookController.transform.position.y, _hookController.hookCastingTimeElapsed / _hookController.hookCastingTime);
             transform.position = new Vector2(transform.position.x, nextY);
@@ -47,11 +49,11 @@ public class HookAnimator : MonoBehaviour {
         }
     }
 
-    void OnHookCast(float hookCastingTime) {
+    private void OnHookCast(float hookCastingTime) {
         spriteFader.StartFade(FADE_DIRECTION.IN, hookCastingTime / 3f);
     }
 
-    void OnHookLanded() {
+    private void OnHookLanded() {
         spriteFader.StartFade(FADE_DIRECTION.OUT, _hookController.hookReelingTime / 1.5f);
         splashAnimator.SetTrigger("HookLandedAnimTrigger");
     }

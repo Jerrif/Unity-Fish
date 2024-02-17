@@ -2,19 +2,14 @@ using System;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager> {
-    [SerializeField] float gameLength = 60f;
-    // [SerializeField] Timer timer;
+    [SerializeField] private GameObject hookController;
+    [SerializeField] private SpriteRenderer hookConstraints;
 
     public GameState state = GameState.NONE;
     public static event Action<GameState> gameStateChanged;
 
-    private void OnEnable() {
-        // timer.timerExpired += TimeIsUp;
-    }
-
     private void Start() {
         UpdateGameState(GameState.MAIN_MENU);
-        // timer.StartTimer(gameLength);
     }
 
     private void Update() {
@@ -24,10 +19,10 @@ public class GameManager : Singleton<GameManager> {
         }
     }
 
-    private void TimeIsUp() {
-        print("waow time is up");
-        // SceneSystem.Instance.LoadScene(0);
-    }
+    // NOTE: READ THESE
+    // https://www.reddit.com/r/Unity3D/comments/57e7np/how_many_scenes_do_your_games_typically_have/
+    // https://www.reddit.com/r/Unity3D/comments/5ie9ow/should_i_use_different_scenes_for_menus/
+    // https://forum.unity.com/threads/what-is-a-scene.481373/
 
     public void UpdateGameState(GameState newState) {
         if (newState == state) return;
@@ -35,8 +30,21 @@ public class GameManager : Singleton<GameManager> {
 
         switch (newState) {
             case GameState.MAIN_MENU:
+                UISystem.Instance.ShowGameUI(false);
+                UISystem.Instance.ShowMainMenu(true);
+                FishManager.Instance.enabled = false;
+                ScoreManager.Instance.enabled = false;
+                hookController.SetActive(false);
+                hookConstraints.enabled = false;
             break;
             case GameState.GAME_START:
+                UISystem.Instance.ShowMainMenu(false);
+                UISystem.Instance.ShowGameUI(true);
+                FishManager.Instance.enabled = true;
+                ScoreManager.Instance.enabled = true;
+                hookController.SetActive(true);
+                hookConstraints.enabled = true;
+                HandleGameStart();
             break;
             case GameState.PAUSED:
             break;
@@ -48,13 +56,11 @@ public class GameManager : Singleton<GameManager> {
 
         gameStateChanged?.Invoke(newState);
     }
-}
 
-public enum GameState {
-    MAIN_MENU,
-    GAME_START,
-    PAUSED,
-    SETTINGS_MENU,
-    GAME_OVER,
-    NONE
+    private void HandleMainMenu() {
+    }
+
+    private void HandleGameStart() {
+        
+    }
 }

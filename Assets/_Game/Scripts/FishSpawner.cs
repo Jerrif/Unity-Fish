@@ -4,18 +4,19 @@ using System;
 public class FishSpawner : MonoBehaviour {
     [SerializeField] private Vector2 spawnAreaSize;
     [SerializeField] private Fish[] fishPrefabs;
-    [SerializeField] private int spawnsPerWave = 4;
     [SerializeField] private float secondsBetweenSpawns = 3.5f;
     [SerializeField] private float randomSpawnVariation = 1.0f;
     [SerializeField] private DIRECTION direction = DIRECTION.RIGHT;
+
+    [SerializeField] public int spawnsPerWave = 4;
     private float spawnTimer = 0f;
 
     public event Action<Fish> spawned;
 
-    private void Start() {
-        // TODO: I think this will be moved to a (non-unity) function, to be called by the `GameManager`
-        SpawnFishGroup(spawnsPerWave);
-    }
+    // private void Start() {
+    //     // TODO: I think this will be moved to a (non-unity) function, to be called by the `GameManager`
+    //     SpawnFishGroup(spawnsPerWave);
+    // }
 
     private void Update() {
         if (spawnTimer < secondsBetweenSpawns) {
@@ -26,7 +27,7 @@ public class FishSpawner : MonoBehaviour {
         }
     }
 
-    private void SpawnFishGroup(int count) {
+    public void SpawnFishGroup(int count) {
         Vector2 pos = transform.position;
         Vector2 spawnPoint = new Vector2(
                 UnityEngine.Random.Range(pos.x - spawnAreaSize.x/2, pos.x + spawnAreaSize.x/2),
@@ -37,7 +38,7 @@ public class FishSpawner : MonoBehaviour {
         }
     }
 
-    private void SpawnFish(Vector2 spawnPoint) {
+    public void SpawnFish(Vector2 spawnPoint) {
         var fishToSpawn = fishPrefabs[UnityEngine.Random.Range(0, fishPrefabs.Length)];
         Fish newFish = Instantiate(fishToSpawn, spawnPoint, Quaternion.identity);
 

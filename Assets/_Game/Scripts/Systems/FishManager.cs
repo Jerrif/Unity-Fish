@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class FishManager : MonoBehaviour {
+public class FishManager : Singleton<FishManager> {
     [SerializeField] private HookController hookController;
     [SerializeField] private FishSpawner[] fishSpawners;
     // TODO: hmm where should the responsibility be for making particle effects appear on caught fish?
@@ -18,12 +18,19 @@ public class FishManager : MonoBehaviour {
     public static event Action fishDiedOfNaturalCausesEvent;
 
     private void OnEnable() {
+        aliveFish = new List<Fish>();
         if (hookController == null || fishSpawners.Length == 0) {
             Debug.LogError("woah gotta hook up the hook controller & fish spawners to the game manager");
             return;
         }
         // "hook" up (hehe) the HookLanded event from hookController to a function in here
         hookController.HookLanded += HookLanded;
+
+        foreach (FishSpawner fishSpawner in fishSpawners) {
+            fishSpawner.enabled = true;
+            fishSpawner.spawned += FishSpawned;
+            fishSpawner.SpawnFishGroup(fishSpawner.spawnsPerWave);
+        }
     }
 
     private void OnDisable() {
@@ -31,15 +38,19 @@ public class FishManager : MonoBehaviour {
         hookController.HookLanded -= HookLanded;
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.spawned -= FishSpawned;
+            fishSpawner.enabled = false;
+        }
+
+        foreach (Fish fish in aliveFish) {
+            Destroy(fish.gameObject);
         }
     }
 
-    private void Awake() {
-        aliveFish = new List<Fish>();
-        foreach (FishSpawner fishSpawner in fishSpawners) {
-            fishSpawner.spawned += FishSpawned;
-        }
-    }
+    // private void Awake() {
+        // aliveFish = new List<Fish>();
+        // foreach (FishSpawner fishSpawner in fishSpawners) {
+        // }
+    // }
 
     private void HookLanded() {
         int numCaught = 0;

@@ -18,6 +18,11 @@ public class SpriteFader : MonoBehaviour {
         newColor = new Color(1f, 1f, 1f, 1f);
     }
 
+    private void OnEnable() {
+        progress = 0f;
+        fading = false;
+    }
+
     private void Update() {
         if (fading) {
             Fade();

@@ -54,9 +54,13 @@ public class Fish : MonoBehaviour {
     }
 
     private void DiedOfNaturalCauses() {
-        spriteFader.fadeComplete -= DiedOfNaturalCauses;
+        // spriteFader.fadeComplete -= DiedOfNaturalCauses;
         diedOfNaturalCauses?.Invoke(this);
         Destroy(gameObject);
+    }
+
+    private void OnDestroy() {
+        spriteFader.fadeComplete -= DiedOfNaturalCauses;
     }
 
     public void Caught() {

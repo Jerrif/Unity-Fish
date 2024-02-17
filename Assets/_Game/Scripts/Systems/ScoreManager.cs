@@ -1,23 +1,28 @@
 using UnityEngine;
 using TMPro;
 
-public class ScoreManager : MonoBehaviour {
+public class ScoreManager : Singleton<ScoreManager> {
     [SerializeField] private TMP_Text scoreDisplay;
     [SerializeField] private TMP_Text missesDisplay;
     private int score = 0;
     private int misses = 0;
 
     void Start() {
+    }
+
+    void OnEnable() {
         // just testing out static events.
         FishManager.fishCaughtEvent += IncrementScore;
         FishManager.fishDiedOfNaturalCausesEvent += IncrementMisses;
-        scoreDisplay.SetText("0");
-        missesDisplay.SetText("0");
+        score = 0;
+        misses = 0;
+        scoreDisplay.SetText(score.ToString());
+        missesDisplay.SetText(score.ToString());
     }
 
     void OnDisable() {
         FishManager.fishCaughtEvent -= IncrementScore;
-        FishManager.fishDiedOfNaturalCausesEvent += IncrementMisses;
+        FishManager.fishDiedOfNaturalCausesEvent -= IncrementMisses;
     }
 
     void Update() {
