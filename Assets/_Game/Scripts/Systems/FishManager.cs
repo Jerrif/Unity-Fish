@@ -46,12 +46,6 @@ public class FishManager : Singleton<FishManager> {
         }
     }
 
-    // private void Awake() {
-        // aliveFish = new List<Fish>();
-        // foreach (FishSpawner fishSpawner in fishSpawners) {
-        // }
-    // }
-
     private void HookLanded() {
         int numCaught = 0;
         Bounds hookBounds = hookController.sprite.bounds;

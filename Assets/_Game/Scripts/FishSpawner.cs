@@ -13,11 +13,6 @@ public class FishSpawner : MonoBehaviour {
 
     public event Action<Fish> spawned;
 
-    // private void Start() {
-    //     // TODO: I think this will be moved to a (non-unity) function, to be called by the `GameManager`
-    //     SpawnFishGroup(spawnsPerWave);
-    // }
-
     private void Update() {
         if (spawnTimer < secondsBetweenSpawns) {
             spawnTimer += Time.deltaTime;

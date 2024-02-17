@@ -14,7 +14,6 @@ public class UISystem : Singleton<UISystem> {
     }
 
     private void OnGameStateChanged(GameState newState) {
-        print("waow new state dood! " + newState.ToString());
     //     // if (newState == GameState.MAIN_MENU) {
     //     //     Instantiate(mainMenuPanel);
     //     // }
@@ -22,7 +21,6 @@ public class UISystem : Singleton<UISystem> {
     }
 
     public void PlayButtonPressed() {
-        print("wow play");
         GameManager.Instance.UpdateGameState(GameState.GAME_START);
     }
 
