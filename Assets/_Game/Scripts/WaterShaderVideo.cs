@@ -22,12 +22,16 @@
 // https://www.youtube.com/@danielilett/videos
 
 // really good, simple, short Unity shaders video
-// `Shaders 101 - Intro to Shaders`
+// `Shaders 101 - Intro to Shaders (Makin' Stuff Look Good)`
 // https://www.youtube.com/watch?v=T-HXmQAMhG0&t=1s
 
 // good particle systems tutorial
-// `Particles 102 - Intro to Particle Systems`
+// `Particles 102 - Intro to Particle Systems (Makin' Stuff Look Good)`
 // https://www.youtube.com/watch?v=rR_bm8f8rVE
+
+// screen transitions (shaders)
+// `Shaders Case Study - Pokémon Battle Transitions (Makin' Stuff Look Good)`
+// https://www.youtube.com/watch?v=LnAoD7hgDxw
 
 // random gamedev stuff (check it out):
 // https://www.youtube.com/c/Imphenzia
@@ -83,6 +87,13 @@
 
 // Pause:
 // https://gamedevbeginner.com/the-right-way-to-pause-the-game-in-unity/
+// https://www.youtube.com/watch?v=JivuXdrIHK0&t=22s (brackeys)
+
+// Settings menu:
+// https://www.youtube.com/watch?v=YOaYQrN1oYQ (brackeys)
+
+// Start menu:
+// https://www.youtube.com/watch?v=zc8ac_qUXQY (brackeys)
 
 // Loading scenes:
 // https://gamedevbeginner.com/how-to-load-a-new-scene-in-unity-with-a-loading-screen/
@@ -91,3 +102,8 @@
 // Saving: (I think this one's pretty good)
 // https://www.reddit.com/r/Unity3D/comments/vmlloj/need_persistent_data_across_runs_of_your_unity/
 // https://www.youtube.com/watch?v=mntS45g8OK4
+
+
+// interesting writeup about Vampire Survivors game architecture
+// https://medium.com/@simon.nordon/unity-case-study-vampire-survivors-806eed11bebb
+
