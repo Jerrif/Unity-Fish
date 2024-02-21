@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // TODO: Maybe I can simplify this and combine `SimpleBlit.cs` into here?
@@ -7,12 +8,14 @@ public class ScreenTransition : MonoBehaviour {
     [SerializeField] private float transitionSpeed = 1f;
     private float fadeTarget = 0f;
     private float fadeCurrent = 0f;
-    private bool fading = false;
+    // private bool fading = false;
+
+    public event Action fadeComplete;
 
     private void OnEnable() {
         fadeTarget = 0f;
         fadeCurrent = 0f;
-        fading = false;
+        // fading = false;
     }
 
     private void Update() {
@@ -27,11 +30,17 @@ public class ScreenTransition : MonoBehaviour {
 
         if (fadeCurrent < fadeTarget) {
             fadeCurrent += transitionSpeed * Time.deltaTime;
-            if (fadeCurrent > fadeTarget) fadeCurrent = fadeTarget;
+            if (fadeCurrent > fadeTarget) {
+                fadeCurrent = fadeTarget;
+                fadeComplete?.Invoke();
+            }
             transitionMaterial.SetFloat("_Cutoff", fadeCurrent);
         } else if (fadeCurrent > fadeTarget) {
             fadeCurrent -= transitionSpeed * Time.deltaTime;
-            if (fadeCurrent < 0f) fadeCurrent = 0f;
+            if (fadeCurrent < 0f) {
+                fadeCurrent = 0f;
+                fadeComplete?.Invoke();
+            }
             transitionMaterial.SetFloat("_Cutoff", fadeCurrent);
         }
     }
