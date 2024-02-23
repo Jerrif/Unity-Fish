@@ -20,14 +20,14 @@ public class ScreenTransition : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.X)) FadeIn();
 
         if (fadeCurrent < fadeTarget) {
-            fadeCurrent += transitionSpeed * Time.deltaTime;
+            fadeCurrent += transitionSpeed * Time.unscaledDeltaTime;
             if (fadeCurrent > fadeTarget) {
                 fadeCurrent = fadeTarget;
                 // fadeOutComplete?.Invoke();
             }
             transitionMaterial.SetFloat("_Cutoff", fadeCurrent);
         } else if (fadeCurrent > fadeTarget) {
-            fadeCurrent -= transitionSpeed * Time.deltaTime;
+            fadeCurrent -= transitionSpeed * Time.unscaledDeltaTime;
             if (fadeCurrent < 0f) {
                 fadeCurrent = 0f;
                 // fadeInComplete?.Invoke();
