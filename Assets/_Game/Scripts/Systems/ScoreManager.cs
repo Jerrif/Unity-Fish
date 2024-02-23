@@ -7,34 +7,32 @@ public class ScoreManager : Singleton<ScoreManager> {
     private int score = 0;
     private int misses = 0;
 
-    void Start() {
-    }
-
-    void OnEnable() {
+    private void OnEnable() {
         // just testing out static events.
         FishManager.fishCaughtEvent += IncrementScore;
         FishManager.fishDiedOfNaturalCausesEvent += IncrementMisses;
-        score = 0;
-        misses = 0;
-        scoreDisplay.SetText(score.ToString());
-        missesDisplay.SetText(score.ToString());
+        Init();
     }
 
-    void OnDisable() {
+    private void OnDisable() {
         FishManager.fishCaughtEvent -= IncrementScore;
         FishManager.fishDiedOfNaturalCausesEvent -= IncrementMisses;
     }
 
-    void Update() {
-    }
-
-    void IncrementScore(int amount) {
+    public void IncrementScore(int amount) {
         score += amount;
         scoreDisplay.SetText(score.ToString());
     }
 
-    void IncrementMisses() {
+    public void IncrementMisses() {
         misses++;
         missesDisplay.SetText(misses.ToString());
+    }
+
+    public void Init() {
+        score = 0;
+        misses = 0;
+        scoreDisplay.SetText("0");
+        missesDisplay.SetText("0");
     }
 }

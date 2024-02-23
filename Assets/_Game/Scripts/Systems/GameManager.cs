@@ -6,6 +6,7 @@ public class GameManager : Singleton<GameManager> {
     [SerializeField] private SpriteRenderer hookConstraints;
 
     public GameState state = GameState.NONE;
+    public bool paused = false;
     public static event Action<GameState> gameStateChanged;
 
     private void Start() {
@@ -14,15 +15,30 @@ public class GameManager : Singleton<GameManager> {
 
     private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            // UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        if (Input.GetKeyDown(KeyCode.Q)) {
             UpdateGameState(GameState.MAIN_MENU);
+        }
+        if (Input.GetKeyDown(KeyCode.P)) {
+            if (!paused) {
+                Pause();
+            } else {
+                Unpause();
+            }
         }
     }
 
-    // NOTE: READ THESE
-    // https://www.reddit.com/r/Unity3D/comments/57e7np/how_many_scenes_do_your_games_typically_have/
-    // https://www.reddit.com/r/Unity3D/comments/5ie9ow/should_i_use_different_scenes_for_menus/
-    // https://forum.unity.com/threads/what-is-a-scene.481373/
+    public void Pause() {
+        if (state != GameState.GAME_START) return;
+        paused = true;
+        Time.timeScale = 0f;
+    }
+
+    public void Unpause() {
+        paused = false;
+        Time.timeScale = 1f;
+    }
 
     public void UpdateGameState(GameState newState) {
         if (newState == state) return;
@@ -30,24 +46,25 @@ public class GameManager : Singleton<GameManager> {
 
         switch (newState) {
             case GameState.MAIN_MENU:
-                UISystem.Instance.ShowGameUI(false);
-                UISystem.Instance.ShowMainMenu(true);
+                // UISystem.Instance.ShowGameUI(false);
+                // UISystem.Instance.ShowMainMenu(true);
+                StartCoroutine(UISystem.Instance.FadeToMainMenu());
                 FishManager.Instance.enabled = false;
                 ScoreManager.Instance.enabled = false;
                 hookController.SetActive(false);
                 hookConstraints.enabled = false;
             break;
             case GameState.GAME_START:
-                UISystem.Instance.ShowMainMenu(false);
-                UISystem.Instance.ShowGameUI(true);
+                // UISystem.Instance.ShowMainMenu(false);
+                // UISystem.Instance.ShowGameUI(true);
                 FishManager.Instance.enabled = true;
                 ScoreManager.Instance.enabled = true;
                 hookController.SetActive(true);
                 hookConstraints.enabled = true;
-                HandleGameStart();
             break;
-            case GameState.PAUSED:
-            break;
+            // case GameState.PAUSED:
+            //     Time.timeScale = 0;
+            // break;
             case GameState.SETTINGS_MENU:
             break;
             case GameState.GAME_OVER:
@@ -55,12 +72,5 @@ public class GameManager : Singleton<GameManager> {
         }
 
         gameStateChanged?.Invoke(newState);
-    }
-
-    private void HandleMainMenu() {
-    }
-
-    private void HandleGameStart() {
-        
     }
 }
