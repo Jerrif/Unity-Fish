@@ -16,6 +16,14 @@ public class Timer : MonoBehaviour {
         isStarted = true;
     }
 
+    public void StopTimer() {
+        isStarted = false;
+    }
+
+    public string SecondsToString() {
+        return Mathf.CeilToInt(_seconds).ToString();
+    }
+
     private void Update() {
         if (!isStarted) {
             return;

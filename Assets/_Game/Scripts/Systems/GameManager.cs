@@ -4,10 +4,21 @@ using UnityEngine;
 public class GameManager : Singleton<GameManager> {
     [SerializeField] private GameObject hookController;
     [SerializeField] private SpriteRenderer hookConstraints;
+    [SerializeField] public Timer gameTimer;
+    [SerializeField] public float gameLength = 60f;
+
+    public bool paused = false;
 
     public GameState state = GameState.NONE;
-    public bool paused = false;
     public static event Action<GameState> gameStateChanged;
+
+    private void OnEnable() {
+        gameTimer.timerExpired += OnTimerExpired;
+    }
+
+    private void OnDisable() {
+        gameTimer.timerExpired -= OnTimerExpired;
+    }
 
     private void Start() {
         UpdateGameState(GameState.MAIN_MENU);
@@ -53,6 +64,7 @@ public class GameManager : Singleton<GameManager> {
                 ScoreManager.Instance.enabled = false;
                 hookController.SetActive(false);
                 hookConstraints.enabled = false;
+                gameTimer.StopTimer();
             break;
             case GameState.GAME_START:
                 // UISystem.Instance.ShowMainMenu(false);
@@ -61,6 +73,7 @@ public class GameManager : Singleton<GameManager> {
                 ScoreManager.Instance.enabled = true;
                 hookController.SetActive(true);
                 hookConstraints.enabled = true;
+                gameTimer.StartTimer(gameLength);
             break;
             // case GameState.PAUSED:
             //     Time.timeScale = 0;
@@ -72,5 +85,13 @@ public class GameManager : Singleton<GameManager> {
         }
 
         gameStateChanged?.Invoke(newState);
+    }
+
+    private void OnTimerExpired() {
+        UpdateGameState(GameState.MAIN_MENU);
+    }
+
+    public string GetSecondsRemaining() {
+        return gameTimer.SecondsToString();
     }
 }

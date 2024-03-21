@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,7 @@ public class UISystem : Singleton<UISystem> {
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private Button playButton; // should probably not hardcode this? or just walk the mainMenuUI tree to find it
     [SerializeField] private GameObject gameUI;
+    [SerializeField] private TMP_Text gameCountdownText;
     private ScreenTransition transitionController;
 
     protected override void Awake() {
@@ -15,14 +17,10 @@ public class UISystem : Singleton<UISystem> {
 
     private void OnEnable() {
         GameManager.gameStateChanged += OnGameStateChanged;
-        // transitionController.fadeOutComplete += OnFadeOutComplete;
-        // transitionController.fadeInComplete += OnFadeInComplete;
     }
 
     private void OnDestroy() {
         GameManager.gameStateChanged -= OnGameStateChanged;
-        // transitionController.fadeOutComplete -= OnFadeOutComplete;
-        // transitionController.fadeInComplete -= OnFadeInComplete;
     }
 
     private void OnGameStateChanged(GameState newState) {
@@ -30,6 +28,13 @@ public class UISystem : Singleton<UISystem> {
     //     //     Instantiate(mainMenuPanel);
     //     // }
     //     mainMenuPanel.SetActive(newState == GameState.MAIN_MENU);
+    }
+
+    private void Update() {
+        if (GameManager.Instance.state == GameState.GAME_START) {
+            // gameCountdownText.SetText(GameManager.Instance.gameTimer.SecondsToString());
+            gameCountdownText.SetText(GameManager.Instance.GetSecondsRemaining());
+        }
     }
 
     public IEnumerator FadeToGame() {
@@ -40,7 +45,8 @@ public class UISystem : Singleton<UISystem> {
         playButton.enabled = true;
         ShowGameUI(true);
         ShowMainMenu(false);
-        ScoreManager.Instance.Init();
+        ScoreManager.Instance.Init(); // annoying hack
+        gameCountdownText.SetText(GameManager.Instance.gameLength.ToString()); // annoying hack
         yield return new WaitForSecondsRealtime(0.5f);
         transitionController.FadeIn();
         while (transitionController.fadeCurrent != transitionController.fadeTarget) {
