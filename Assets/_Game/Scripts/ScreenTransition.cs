@@ -15,10 +15,6 @@ public class ScreenTransition : MonoBehaviour {
     }
 
     private void Update() {
-        // TODO: delete these, obviously
-        if (Input.GetKeyDown(KeyCode.Z)) FadeOut();
-        if (Input.GetKeyDown(KeyCode.X)) FadeIn();
-
         if (fadeCurrent < fadeTarget) {
             fadeCurrent += transitionSpeed * Time.unscaledDeltaTime;
             if (fadeCurrent > fadeTarget) {
@@ -41,6 +37,6 @@ public class ScreenTransition : MonoBehaviour {
     }
 
     public void FadeOut() {
-        fadeTarget = 1f;
+        fadeTarget = 1.05f;
     }
 }

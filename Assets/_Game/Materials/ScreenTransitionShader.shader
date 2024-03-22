@@ -2,7 +2,8 @@ Shader "Unlit/ScreenTransitionShader" {
     // used to define properties you can set in the inspector
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
-        _Cutoff ("Cutoff", Range(0,1)) = 0.5 
+        _MaskTex ("Mask Texture", 2D) = "black" {}
+        _Cutoff ("Cutoff", Range(0,1.05)) = 0.5 
         _Color ("Colour", Color) = (0, 0, 0, 1)
     }
     // defines the rendering pass
@@ -32,6 +33,7 @@ Shader "Unlit/ScreenTransitionShader" {
             struct v2f {
                 float2 uv : TEXCOORD0; // clip space position
                 float4 vertex : SV_POSITION; // texture coordinate
+                float2 uvMask : TEXCOORD1;
             };
 
 
@@ -53,7 +55,9 @@ Shader "Unlit/ScreenTransitionShader" {
 
 
             sampler2D _MainTex;
+            sampler2D _MaskTex;
             float4 _MainTex_ST;
+            float4 _MaskTex_ST;
             float _Cutoff;
             fixed4 _Color;
 
@@ -61,13 +65,17 @@ Shader "Unlit/ScreenTransitionShader" {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uvMask = TRANSFORM_TEX(v.vertex, _MaskTex);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                // if (i.uv.x < _Cutoff)
-                if (0.5 - abs(i.uv.y - 0.5) < abs(_Cutoff) * 0.5)
+                // if (0.5 - abs(i.uv.y - 0.5) < abs(_Cutoff) * 0.5)
+                    // return _Color;
+                fixed4 col = tex2D(_MaskTex, i.uv);
+                if (col.r < _Cutoff)
                     return _Color;
+                    // return smoothstep(col.r+0.10, col.r-0.10, _Cutoff);
 
                 return tex2D(_MainTex, i.uv);
             }
