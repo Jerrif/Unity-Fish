@@ -33,6 +33,7 @@ Shader "Unlit/ScreenTransitionShaderUNUSED" {
             struct v2f {
                 float2 uv : TEXCOORD0; // clip space position
                 float4 vertex : SV_POSITION; // texture coordinate
+                float cutoff : ASDF;
             };
 
             sampler2D _MainTex;
@@ -46,6 +47,7 @@ Shader "Unlit/ScreenTransitionShaderUNUSED" {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.cutoff = _Cutoff + _Cutoff / _Ease;
                 return o;
             }
 
@@ -55,7 +57,6 @@ Shader "Unlit/ScreenTransitionShaderUNUSED" {
                the ease value controls how smooth the transition is */
             fixed4 frag (v2f i) : SV_Target {
                 fixed4 mask = tex2D(_MaskTex, i.uv);
-                float cutoff = _Cutoff + _Cutoff / _Ease;
 
                 // we start by grabbing the color from the main texture
                 float4 col = tex2D(_MainTex, i.uv);
@@ -69,7 +70,7 @@ Shader "Unlit/ScreenTransitionShaderUNUSED" {
                 c = lerp(
                     col,       // start color
                     _Color,    // end color (mask color)
-                    saturate((cutoff - mask.r) * _Ease) // the value between 0 and 1
+                    saturate((i.cutoff - mask.r) * _Ease) // the value between 0 and 1
                     );
 
                 return c;
