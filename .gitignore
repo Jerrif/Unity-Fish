@@ -159,3 +159,4 @@ ProjectSettings/CommonBurstAotSettings.json
 ProjectSettings/BurstAotSettings_StandaloneWindows.json
 *.ttf
 *.otf
+*.psd
