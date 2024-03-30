@@ -84,6 +84,24 @@ Shader "Unlit/TerrainUnderwaterShader" {
                 return col;
             }
 
+            fixed4 fragWobbly (v2f i) : SV_Target {
+                // man, this *almost* works, but I can't solve the fact that the sprite
+                // next to the current one (on the tilesheet) will poke through the corners
+                fixed offset = i.uvWorld.y + (sin(i.uvWorld.x * 3 + _Time.y) * _WaveMagnitude);
+                fixed height = step(_WaterHeight, offset);
+                fixed height2 = step(offset, _WaterHeight);
+                float2 disp = float2(sin(_CosTime.x + i.uv.y * 50) * 0.008, 0);
+                // disp = 0;
+                fixed4 col = tex2D(_MainTex, i.uv + disp * height2);
+                
+                fixed waterline = height - step(_WaterHeight + 0.03, offset);
+
+                col.rgba += waterline * _WaterlineColor;
+                col.rgb *= lerp(_UnderwaterColor, 1, height);
+                col.a *= lerp(_UnderwaterOpacity, 1, height);
+                return col;
+            }
+
             fixed4 frag (v2f i) : SV_Target {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 fixed offset = i.uvWorld.y + (sin(i.uvWorld.x * 3 + _Time.y) * _WaveMagnitude);
