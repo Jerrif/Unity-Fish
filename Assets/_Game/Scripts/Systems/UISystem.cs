@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,10 +23,6 @@ public class UISystem : Singleton<UISystem> {
     }
 
     private void OnGameStateChanged(GameState newState) {
-    //     // if (newState == GameState.MAIN_MENU) {
-    //     //     Instantiate(mainMenuPanel);
-    //     // }
-    //     mainMenuPanel.SetActive(newState == GameState.MAIN_MENU);
     }
 
     private void Update() {
@@ -35,14 +30,6 @@ public class UISystem : Singleton<UISystem> {
             gameCountdownText.SetText(GameManager.Instance.GetSecondsRemaining());
         }
     }
-
-    // public IEnumerator FadeOutCoroutine() {
-    //     transitionController.FadeOut();
-    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-    //         yield return false;
-    //     }
-    //     yield return true;
-    // }
 
     public bool FadeOut() {
         transitionController.FadeOut();
@@ -66,47 +53,9 @@ public class UISystem : Singleton<UISystem> {
         gameCountdownText.SetText(GameManager.Instance.gameLength.ToString());
     }
 
-    // public IEnumerator FadeToGame() {
-    //     transitionController.FadeOut();
-    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-    //         yield return null;
-    //     }
-    //     playButton.enabled = true;
-    //     ShowGameUI(true);
-    //     ShowMainMenu(false);
-    //     ScoreManager.Instance.Init(); // annoying hack
-    //     gameCountdownText.SetText(GameManager.Instance.gameLength.ToString()); // annoying hack
-    //     yield return new WaitForSecondsRealtime(0.5f);
-    //     transitionController.FadeIn();
-    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-    //         yield return null;
-    //     }
-        
-    //     GameManager.Instance.UpdateGameState(GameState.GAME_START);
-    // }
-
-    public IEnumerator FadeToMainMenu() {
-        transitionController.FadeOut();
-        while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-            yield return null;
-        }
-        ShowGameUI(false);
-        ShowMainMenu(true);
-        yield return new WaitForSecondsRealtime(0.5f);
-        transitionController.FadeIn();
-        while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-            yield return null;
-        }
-        
-        playButton.enabled = true;
-        GameManager.Instance.UpdateGameState(GameState.MAIN_MENU);
-    }
-
     public void PlayButtonPressed() {
         playButton.enabled = false;
         GameManager.Instance.UpdateGameState(GameState.GAME_START);
-        // StartCoroutine(FadeToGame());
-        // StartCoroutine(FadeOutCoroutine());
     }
 
     public void ShowGameUI(bool active) {
@@ -114,6 +63,7 @@ public class UISystem : Singleton<UISystem> {
     }
 
     public void ShowMainMenu(bool active) {
+        playButton.enabled = true;
         mainMenuUI.SetActive(active);
     }
 }

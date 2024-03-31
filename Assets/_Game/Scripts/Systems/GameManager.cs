@@ -58,12 +58,7 @@ public class GameManager : Singleton<GameManager> {
 
         switch (newState) {
             case GameState.MAIN_MENU:
-                StartCoroutine(UISystem.Instance.FadeToMainMenu());
-                FishManager.Instance.enabled = false;
-                ScoreManager.Instance.enabled = false;
-                hookController.SetActive(false);
-                hookConstraints.enabled = false;
-                gameTimer.StopTimer();
+                StartCoroutine(HandleMainMenu());
             break;
             case GameState.GAME_START:
                 StartCoroutine(HandleGameStart());
@@ -75,8 +70,20 @@ public class GameManager : Singleton<GameManager> {
             case GameState.GAME_OVER:
             break;
         }
-
         gameStateChanged?.Invoke(newState);
+    }
+
+    private IEnumerator HandleMainMenu() {
+        gameTimer.StopTimer();
+        yield return new WaitUntil(() => UISystem.Instance.FadeOut());
+        UISystem.Instance.ShowGameUI(false);
+        UISystem.Instance.ShowMainMenu(true);
+        FishManager.Instance.enabled = false;
+        ScoreManager.Instance.enabled = false;
+        hookController.SetActive(false);
+        hookConstraints.enabled = false;
+        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitUntil(() => UISystem.Instance.FadeIn());
     }
 
     private IEnumerator HandleGameStart() {
