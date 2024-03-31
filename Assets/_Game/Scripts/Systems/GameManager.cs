@@ -10,7 +10,8 @@ public class GameManager : Singleton<GameManager> {
 
     public bool paused = false;
 
-    public GameState state = GameState.NONE;
+    [HideInInspector] public GameState state = GameState.NONE;
+    [SerializeField] private GameState startingState = GameState.MAIN_MENU;
     public static event Action<GameState> gameStateChanged;
 
     private void OnEnable() {
@@ -22,7 +23,7 @@ public class GameManager : Singleton<GameManager> {
     }
 
     private void Start() {
-        UpdateGameState(GameState.MAIN_MENU);
+        UpdateGameState(startingState);
     }
 
     private void Update() {
@@ -31,6 +32,10 @@ public class GameManager : Singleton<GameManager> {
         }
         if (Input.GetKeyDown(KeyCode.Q)) {
             UpdateGameState(GameState.MAIN_MENU);
+        }
+        if (Input.GetKeyDown(KeyCode.Return) && state == GameState.MAIN_MENU) {
+            // NOTE: this is only for testing purposes
+            UpdateGameState(GameState.GAME_START);
         }
         if (Input.GetKeyDown(KeyCode.P)) {
             if (!paused) {
@@ -100,10 +105,6 @@ public class GameManager : Singleton<GameManager> {
 
         UpdateGameState(GameState.GAME_RUNNING);
     }
-
-    // private IEnumerator HandleMainMenu() {
-
-    // }
 
     private void OnTimerExpired() {
         UpdateGameState(GameState.MAIN_MENU);
