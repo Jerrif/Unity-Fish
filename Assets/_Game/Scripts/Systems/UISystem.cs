@@ -31,30 +31,59 @@ public class UISystem : Singleton<UISystem> {
     }
 
     private void Update() {
-        if (GameManager.Instance.state == GameState.GAME_START) {
-            // gameCountdownText.SetText(GameManager.Instance.gameTimer.SecondsToString());
+        if (GameManager.Instance.state == GameState.GAME_RUNNING) {
             gameCountdownText.SetText(GameManager.Instance.GetSecondsRemaining());
         }
     }
 
-    public IEnumerator FadeToGame() {
+    // public IEnumerator FadeOutCoroutine() {
+    //     transitionController.FadeOut();
+    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
+    //         yield return false;
+    //     }
+    //     yield return true;
+    // }
+
+    public bool FadeOut() {
         transitionController.FadeOut();
         while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-            yield return null;
+            return false;
         }
-        playButton.enabled = true;
-        ShowGameUI(true);
-        ShowMainMenu(false);
-        ScoreManager.Instance.Init(); // annoying hack
-        gameCountdownText.SetText(GameManager.Instance.gameLength.ToString()); // annoying hack
-        yield return new WaitForSecondsRealtime(0.5f);
+        return true;
+    }
+
+    public bool FadeIn() {
         transitionController.FadeIn();
         while (transitionController.fadeCurrent != transitionController.fadeTarget) {
-            yield return null;
+            return false;
         }
-        
-        GameManager.Instance.UpdateGameState(GameState.GAME_START);
+        return true;
     }
+
+    public void InitGameUI() {
+        ShowGameUI(true);
+        ScoreManager.Instance.enabled = true;
+        gameCountdownText.SetText(GameManager.Instance.gameLength.ToString());
+    }
+
+    // public IEnumerator FadeToGame() {
+    //     transitionController.FadeOut();
+    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
+    //         yield return null;
+    //     }
+    //     playButton.enabled = true;
+    //     ShowGameUI(true);
+    //     ShowMainMenu(false);
+    //     ScoreManager.Instance.Init(); // annoying hack
+    //     gameCountdownText.SetText(GameManager.Instance.gameLength.ToString()); // annoying hack
+    //     yield return new WaitForSecondsRealtime(0.5f);
+    //     transitionController.FadeIn();
+    //     while (transitionController.fadeCurrent != transitionController.fadeTarget) {
+    //         yield return null;
+    //     }
+        
+    //     GameManager.Instance.UpdateGameState(GameState.GAME_START);
+    // }
 
     public IEnumerator FadeToMainMenu() {
         transitionController.FadeOut();
@@ -75,7 +104,9 @@ public class UISystem : Singleton<UISystem> {
 
     public void PlayButtonPressed() {
         playButton.enabled = false;
-        StartCoroutine(FadeToGame());
+        GameManager.Instance.UpdateGameState(GameState.GAME_START);
+        // StartCoroutine(FadeToGame());
+        // StartCoroutine(FadeOutCoroutine());
     }
 
     public void ShowGameUI(bool active) {

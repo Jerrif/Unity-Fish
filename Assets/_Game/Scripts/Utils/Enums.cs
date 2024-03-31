@@ -12,7 +12,7 @@ public enum FADE_DIRECTION : ushort {
 public enum GameState {
     MAIN_MENU,
     GAME_START,
-    PAUSED,
+    GAME_RUNNING,
     SETTINGS_MENU,
     GAME_OVER,
     NONE

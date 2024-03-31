@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager> {
@@ -57,8 +58,6 @@ public class GameManager : Singleton<GameManager> {
 
         switch (newState) {
             case GameState.MAIN_MENU:
-                // UISystem.Instance.ShowGameUI(false);
-                // UISystem.Instance.ShowMainMenu(true);
                 StartCoroutine(UISystem.Instance.FadeToMainMenu());
                 FishManager.Instance.enabled = false;
                 ScoreManager.Instance.enabled = false;
@@ -67,17 +66,10 @@ public class GameManager : Singleton<GameManager> {
                 gameTimer.StopTimer();
             break;
             case GameState.GAME_START:
-                // UISystem.Instance.ShowMainMenu(false);
-                // UISystem.Instance.ShowGameUI(true);
-                FishManager.Instance.enabled = true;
-                ScoreManager.Instance.enabled = true;
-                hookController.SetActive(true);
-                hookConstraints.enabled = true;
-                gameTimer.StartTimer(gameLength);
+                StartCoroutine(HandleGameStart());
             break;
-            // case GameState.PAUSED:
-            //     Time.timeScale = 0;
-            // break;
+            case GameState.GAME_RUNNING:
+            break;
             case GameState.SETTINGS_MENU:
             break;
             case GameState.GAME_OVER:
@@ -86,6 +78,25 @@ public class GameManager : Singleton<GameManager> {
 
         gameStateChanged?.Invoke(newState);
     }
+
+    private IEnumerator HandleGameStart() {
+        FishManager.Instance.enabled = false; // hmm a little bit of a hack
+        yield return new WaitUntil(() => UISystem.Instance.FadeOut());
+        UISystem.Instance.ShowMainMenu(false);
+        UISystem.Instance.InitGameUI();
+        hookConstraints.enabled = true;
+        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitUntil(() => UISystem.Instance.FadeIn());
+        FishManager.Instance.enabled = true;
+        hookController.SetActive(true);
+        gameTimer.StartTimer(gameLength);
+
+        UpdateGameState(GameState.GAME_RUNNING);
+    }
+
+    // private IEnumerator HandleMainMenu() {
+
+    // }
 
     private void OnTimerExpired() {
         UpdateGameState(GameState.MAIN_MENU);
