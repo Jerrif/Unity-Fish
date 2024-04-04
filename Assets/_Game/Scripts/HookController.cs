@@ -8,14 +8,14 @@ using UnityEngine;
 public class HookController : MonoBehaviour {
     
     [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private GameObject hookConstraints;
+    [SerializeField] private GameObject playArea;
     [SerializeField] public float hookCastingTime = 3f;
     [SerializeField] public float hookReelingTime = 1f; // delay period after landing, before being able to cast again
     public float hookCastingTimeElapsed { get; private set; } = 0f;
     public float hookReelingTimeElapsed { get; private set; } = 0f;
 
     public SpriteRenderer sprite { get; private set; }
-    private Bounds _constraintsArea;
+    private Bounds playAreaBounds;
 
     public bool casting { get; private set; } = false;
     public bool reeling { get; private set; } = false;
@@ -25,11 +25,11 @@ public class HookController : MonoBehaviour {
     // public event Action ReelingFinished;
 
     private void Awake() {
-       if (!hookConstraints) {
+       if (!playArea) {
             print("Yo hook constraints not set in HookController");
        }
         sprite = GetComponent<SpriteRenderer>();
-        _constraintsArea = hookConstraints.GetComponent<SpriteRenderer>().bounds;
+        playAreaBounds = playArea.GetComponent<SpriteRenderer>().bounds;
     }
 
     private void OnEnable() {
@@ -90,16 +90,16 @@ public class HookController : MonoBehaviour {
 
     private Vector2 KeepInBounds(Vector2 pos) {
         Bounds hookArea = sprite.bounds;
-        if (pos.x - hookArea.extents.x < _constraintsArea.min.x) {
-            pos.x = _constraintsArea.min.x + hookArea.extents.x;
-        } else if (pos.x + hookArea.extents.x > _constraintsArea.max.x) {
-            pos.x = _constraintsArea.max.x - hookArea.extents.x;
+        if (pos.x - hookArea.extents.x < playAreaBounds.min.x) {
+            pos.x = playAreaBounds.min.x + hookArea.extents.x;
+        } else if (pos.x + hookArea.extents.x > playAreaBounds.max.x) {
+            pos.x = playAreaBounds.max.x - hookArea.extents.x;
         }
 
-        if (pos.y - hookArea.extents.y < _constraintsArea.min.y) {
-            pos.y = _constraintsArea.min.y + hookArea.extents.y;
-        } else if (pos.y + hookArea.extents.y > _constraintsArea.max.y) {
-            pos.y = _constraintsArea.max.y - hookArea.extents.y;
+        if (pos.y - hookArea.extents.y < playAreaBounds.min.y) {
+            pos.y = playAreaBounds.min.y + hookArea.extents.y;
+        } else if (pos.y + hookArea.extents.y > playAreaBounds.max.y) {
+            pos.y = playAreaBounds.max.y - hookArea.extents.y;
         }
         return pos;
     }
