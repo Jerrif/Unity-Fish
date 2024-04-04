@@ -14,17 +14,6 @@ public class UISystem : Singleton<UISystem> {
         transitionController = GetComponent<ScreenTransition>();
     }
 
-    private void OnEnable() {
-        GameManager.gameStateChanged += OnGameStateChanged;
-    }
-
-    private void OnDestroy() {
-        GameManager.gameStateChanged -= OnGameStateChanged;
-    }
-
-    private void OnGameStateChanged(GameState newState) {
-    }
-
     private void Update() {
         if (GameManager.Instance.state == GameState.GAME_RUNNING) {
             gameCountdownText.SetText(GameManager.Instance.GetSecondsRemaining());
