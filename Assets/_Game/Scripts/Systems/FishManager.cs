@@ -7,6 +7,7 @@ public class FishManager : Singleton<FishManager> {
     [SerializeField] private FishSpawner[] fishSpawners;
     // TODO: hmm where should the responsibility be for making particle effects appear on caught fish?
     [SerializeField] private ParticleSystem particleManager;
+    [SerializeField] private PointsTextObjectPool pointsTextObjectPool;
 
     private List<Fish> aliveFish;
 
@@ -59,6 +60,7 @@ public class FishManager : Singleton<FishManager> {
             }
         }
 
+        // TODO: why is this here and not in the intersection check?
         if (numCaught > 0) {
             foreach (Fish cf in caughtFish) {
                 var emitParams = new ParticleSystem.EmitParams {
@@ -66,6 +68,7 @@ public class FishManager : Singleton<FishManager> {
                     position = cf.transform.position,
                 };
                 particleManager.Emit(emitParams, 40);
+                pointsTextObjectPool.Activate(cf.transform.position);
                 aliveFish.Remove(cf);
                 cf.Caught();
             }
