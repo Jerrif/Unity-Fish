@@ -90,18 +90,17 @@ public class HookController : MonoBehaviour {
 
     private Vector2 KeepInBounds(Vector2 pos) {
         Bounds hookArea = sprite.bounds;
-        if (hookArea.min.x < _constraintsArea.min.x) {
+        if (pos.x - hookArea.extents.x < _constraintsArea.min.x) {
             pos.x = _constraintsArea.min.x + hookArea.extents.x;
-        } else if (hookArea.max.x > _constraintsArea.max.x) {
+        } else if (pos.x + hookArea.extents.x > _constraintsArea.max.x) {
             pos.x = _constraintsArea.max.x - hookArea.extents.x;
         }
 
-        if (hookArea.min.y < _constraintsArea.min.y) {
+        if (pos.y - hookArea.extents.y < _constraintsArea.min.y) {
             pos.y = _constraintsArea.min.y + hookArea.extents.y;
-        } else if (hookArea.max.y > _constraintsArea.max.y) {
+        } else if (pos.y + hookArea.extents.y > _constraintsArea.max.y) {
             pos.y = _constraintsArea.max.y - hookArea.extents.y;
         }
-
         return pos;
     }
 }
