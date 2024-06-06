@@ -47,7 +47,7 @@ public class GameManager : Singleton<GameManager> {
     }
 
     public void Pause() {
-        if (state != GameState.GAME_START) return;
+        if (state != GameState.GAME_RUNNING) return;
         paused = true;
         Time.timeScale = 0f;
     }
