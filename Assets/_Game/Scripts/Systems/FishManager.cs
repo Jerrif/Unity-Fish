@@ -9,6 +9,9 @@ public class FishManager : Singleton<FishManager> {
     [SerializeField] private ParticleSystem particleManager;
     [SerializeField] private PointsTextObjectPool pointsTextObjectPool;
 
+    [SerializeField] private float swimmableAreaTop;
+    [SerializeField] private float swimmableAreaBottom;
+
     private List<Fish> aliveFish;
 
     // RESEARCH: this could be an event, or it could just have a reference to the scoreboard?
@@ -78,6 +81,7 @@ public class FishManager : Singleton<FishManager> {
 
     private void FishSpawned(Fish newFish) {
         aliveFish.Add(newFish);
+        newFish.setSwimmableArea(swimmableAreaTop, swimmableAreaBottom);
         newFish.diedOfNaturalCauses += FishDied;
     }
 
@@ -85,5 +89,11 @@ public class FishManager : Singleton<FishManager> {
         aliveFish.Remove(dedFish);
         dedFish.diedOfNaturalCauses -= FishDied;
         fishDiedOfNaturalCausesEvent?.Invoke();
+    }
+
+    void OnDrawGizmosSelected() {
+        Gizmos.color = Color.gray;
+        Gizmos.DrawRay(new Vector3(-9, swimmableAreaTop, 0), Vector2.right * 18);
+        Gizmos.DrawRay(new Vector3(-9, swimmableAreaBottom, 0), Vector2.right * 18);
     }
 }

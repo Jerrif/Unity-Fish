@@ -6,6 +6,8 @@ public class Fish : MonoBehaviour {
     private float randomSpeedVariance = 0.50f;
     [SerializeField] private bool showHitbox = false;
     private float distanceToTravel = 14f;
+    private float swimmableAreaTop;
+    private float swimmableAreaBottom;
 
     private Vector2 startPos;
     private int moveDirection = 1;
@@ -27,12 +29,19 @@ public class Fish : MonoBehaviour {
 
     private void Update() {
         if (markedForDeath) {
-            // slow down while fading away TODO: slow down the sine movement as well
             speed = Mathf.Lerp(speed, 0, 1f * Time.deltaTime);
         }
         transform.position += Vector3.left * moveDirection * Time.deltaTime * speed;
         if (!markedForDeath && distanceTravelled() >= distanceToTravel) {
             MarkForDeath();
+        }
+    }
+
+    public void setSwimmableArea(float top, float bottom) {
+        swimmableAreaTop = top;
+        swimmableAreaBottom = bottom;
+        if (TryGetComponent<SineMovement>(out SineMovement sineMovement)) {
+            sineMovement.setSwimmableArea(top, bottom);
         }
     }
 
@@ -64,7 +73,7 @@ public class Fish : MonoBehaviour {
     }
 
     public void Caught() {
-        // NOTE: TODO: RESEARCH: currently this gets called by the `GameManager` when a fish is caught. Dunno if that's a bad way to do it.
+        // NOTE: TODO: RESEARCH: currently this gets called by the `FishManager` when a fish is caught. Dunno if that's a bad way to do it.
         Destroy(gameObject);
     }
 

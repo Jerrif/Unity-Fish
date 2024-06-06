@@ -6,6 +6,8 @@ public class SineMovement : MonoBehaviour {
     [SerializeField] private float frequency = 1f;
     private Vector2 startPos;
     private float startOffset;
+    private float swimmableAreaTop;
+    private float swimmableAreaBottom;
 
     void Start() {
         startPos = transform.position;
@@ -20,6 +22,15 @@ public class SineMovement : MonoBehaviour {
     void Update() {
         Vector2 nextPos = transform.position;
         nextPos.y = Mathf.Sin(Time.time * frequency + startOffset) * amplitude + startPos.y;
+        if (nextPos.y > swimmableAreaTop || nextPos.y < swimmableAreaBottom) {
+            nextPos.y = transform.position.y;
+        }
         transform.position = nextPos;
+    }
+
+    // man, everything started off so nicely. Ah well.
+    public void setSwimmableArea(float top, float bottom) {
+        swimmableAreaTop = top;
+        swimmableAreaBottom = bottom;
     }
 }
