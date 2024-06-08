@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class SineMovement : MonoBehaviour {
-    // TODO: could add a small random freq/amp offset for each fish
     [SerializeField] private float amplitude = 1f;
     [SerializeField] private float frequency = 1f;
     private Vector2 startPos;

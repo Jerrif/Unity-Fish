@@ -81,7 +81,10 @@ public class FishManager : Singleton<FishManager> {
 
     private void FishSpawned(Fish newFish) {
         aliveFish.Add(newFish);
-        newFish.setSwimmableArea(swimmableAreaTop, swimmableAreaBottom);
+        // newFish.setSwimmableArea(swimmableAreaTop, swimmableAreaBottom);
+        if (newFish.TryGetComponent<SineMovement>(out SineMovement sineMovement)) {
+            sineMovement.setSwimmableArea(swimmableAreaTop, swimmableAreaBottom);
+        }
         newFish.diedOfNaturalCauses += FishDied;
     }
 

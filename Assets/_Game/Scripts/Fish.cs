@@ -6,8 +6,6 @@ public class Fish : MonoBehaviour {
     private float randomSpeedVariance = 0.50f;
     [SerializeField] private bool showHitbox = false;
     private float distanceToTravel = 14f;
-    private float swimmableAreaTop;
-    private float swimmableAreaBottom;
 
     private Vector2 startPos;
     private int moveDirection = 1;
@@ -34,14 +32,6 @@ public class Fish : MonoBehaviour {
         transform.position += Vector3.left * moveDirection * Time.deltaTime * speed;
         if (!markedForDeath && distanceTravelled() >= distanceToTravel) {
             MarkForDeath();
-        }
-    }
-
-    public void setSwimmableArea(float top, float bottom) {
-        swimmableAreaTop = top;
-        swimmableAreaBottom = bottom;
-        if (TryGetComponent<SineMovement>(out SineMovement sineMovement)) {
-            sineMovement.setSwimmableArea(top, bottom);
         }
     }
 
