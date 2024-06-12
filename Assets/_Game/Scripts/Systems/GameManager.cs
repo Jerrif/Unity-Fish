@@ -33,6 +33,9 @@ public class GameManager : Singleton<GameManager> {
         if (Input.GetKeyDown(KeyCode.Q)) {
             UpdateGameState(GameState.MAIN_MENU);
         }
+        if (Input.GetKeyDown(KeyCode.T)) {
+            UpdateGameState(GameState.GAME_OVER);
+        }
         if (Input.GetKeyDown(KeyCode.Return) && state == GameState.MAIN_MENU) {
             // NOTE: this is only for testing purposes
             UpdateGameState(GameState.GAME_START);
@@ -73,15 +76,29 @@ public class GameManager : Singleton<GameManager> {
             case GameState.SETTINGS_MENU:
             break;
             case GameState.GAME_OVER:
+                StartCoroutine(HandleGameOver());
             break;
         }
         gameStateChanged?.Invoke(newState);
     }
 
+    private IEnumerator HandleGameOver() {
+        yield return new WaitUntil(() => UISystem.Instance.FadeOut());
+        // UISystem.Instance.UnloadAllUI();
+        UISystem.Instance.ShowGameOverUI(true);
+        FishManager.Instance.enabled = false;
+        ScoreManager.Instance.enabled = false;
+        hookController.SetActive(false);
+        hookConstraints.enabled = false;
+        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitUntil(() => UISystem.Instance.FadeIn());
+    }
+
     private IEnumerator HandleMainMenu() {
         gameTimer.StopTimer();
         yield return new WaitUntil(() => UISystem.Instance.FadeOut());
-        UISystem.Instance.ShowGameUI(false);
+        // UISystem.Instance.ShowGameUI(false);
+        UISystem.Instance.UnloadAllUI();
         UISystem.Instance.ShowMainMenu(true);
         FishManager.Instance.enabled = false;
         ScoreManager.Instance.enabled = false;
@@ -94,8 +111,9 @@ public class GameManager : Singleton<GameManager> {
     private IEnumerator HandleGameStart() {
         FishManager.Instance.enabled = false; // hmm a little bit of a hack
         yield return new WaitUntil(() => UISystem.Instance.FadeOut());
-        UISystem.Instance.ShowMainMenu(false);
-        UISystem.Instance.InitGameUI();
+        // UISystem.Instance.ShowMainMenu(false);
+        UISystem.Instance.UnloadAllUI();
+        UISystem.Instance.InitAndShowGameUI();
         hookConstraints.enabled = true;
         yield return new WaitForSecondsRealtime(0.5f);
         yield return new WaitUntil(() => UISystem.Instance.FadeIn());
@@ -107,7 +125,8 @@ public class GameManager : Singleton<GameManager> {
     }
 
     private void OnTimerExpired() {
-        UpdateGameState(GameState.MAIN_MENU);
+        // UpdateGameState(GameState.MAIN_MENU);
+        UpdateGameState(GameState.GAME_OVER);
     }
 
     public string GetSecondsRemaining() {

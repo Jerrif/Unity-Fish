@@ -7,6 +7,7 @@ public class UISystem : Singleton<UISystem> {
     [SerializeField] private Button playButton; // should probably not hardcode this? or just walk the mainMenuUI tree to find it
     [SerializeField] private GameObject gameUI;
     [SerializeField] private TMP_Text gameCountdownText;
+    [SerializeField] private GameObject gameOverUI;
     private ScreenTransition transitionController;
 
     protected override void Awake() {
@@ -36,7 +37,7 @@ public class UISystem : Singleton<UISystem> {
         return true;
     }
 
-    public void InitGameUI() {
+    public void InitAndShowGameUI() {
         ShowGameUI(true);
         ScoreManager.Instance.enabled = true;
         gameCountdownText.SetText(GameManager.Instance.gameLength.ToString());
@@ -47,6 +48,10 @@ public class UISystem : Singleton<UISystem> {
         GameManager.Instance.UpdateGameState(GameState.GAME_START);
     }
 
+    public void MainMenuButtonPressed() {
+        GameManager.Instance.UpdateGameState(GameState.MAIN_MENU);
+    }
+
     public void ShowGameUI(bool active) {
         gameUI.SetActive(active);
     }
@@ -54,5 +59,15 @@ public class UISystem : Singleton<UISystem> {
     public void ShowMainMenu(bool active) {
         playButton.enabled = true;
         mainMenuUI.SetActive(active);
+    }
+
+    public void ShowGameOverUI(bool active) {
+        gameOverUI.SetActive(active);
+    }
+
+    public void UnloadAllUI() {
+        mainMenuUI.SetActive(false);
+        gameUI.SetActive(false);
+        gameOverUI.SetActive(false);
     }
 }
