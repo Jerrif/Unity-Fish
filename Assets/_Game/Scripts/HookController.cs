@@ -33,6 +33,7 @@ public class HookController : MonoBehaviour {
     }
 
     private void OnEnable() {
+        transform.position = Vector2.zero;
         hookCastingTimeElapsed = 0f;
         hookReelingTimeElapsed = 0f;
         casting = false;
