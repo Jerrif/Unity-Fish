@@ -7,9 +7,9 @@ public class GameOverUI : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI catchesIntText;
     [SerializeField] private TextMeshProUGUI missesIntText;
 
-    private void Start() {
-        catchesIntText.SetText("138");
-        missesIntText.SetText("10");
+    private void Awake() {
+        catchesIntText.SetText("999");
+        missesIntText.SetText("999");
     }
 
     private void Update() {
