@@ -35,4 +35,12 @@ public class ScoreManager : Singleton<ScoreManager> {
         scoreDisplay.SetText("0");
         missesDisplay.SetText("0");
     }
+
+    public int GetCatches() {
+        return score;
+    }
+
+    public int GetMisses() {
+        return misses;
+    }
 }

@@ -83,8 +83,9 @@ public class GameManager : Singleton<GameManager> {
     }
 
     private IEnumerator HandleGameOver() {
+        // TODO: Do something fancy with the transition, instead of just fading out.
         yield return new WaitUntil(() => UISystem.Instance.FadeOut());
-        // UISystem.Instance.UnloadAllUI();
+        UISystem.Instance.UnloadAllUI();
         UISystem.Instance.ShowGameOverUI(true);
         FishManager.Instance.enabled = false;
         ScoreManager.Instance.enabled = false;

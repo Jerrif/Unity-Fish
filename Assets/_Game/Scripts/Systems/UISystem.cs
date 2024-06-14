@@ -7,7 +7,8 @@ public class UISystem : Singleton<UISystem> {
     [SerializeField] private Button playButton; // should probably not hardcode this? or just walk the mainMenuUI tree to find it
     [SerializeField] private GameObject gameUI;
     [SerializeField] private TMP_Text gameCountdownText;
-    [SerializeField] private GameObject gameOverUI;
+    // [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameOverUI gameOverUI;
     private ScreenTransition transitionController;
 
     protected override void Awake() {
@@ -62,12 +63,19 @@ public class UISystem : Singleton<UISystem> {
     }
 
     public void ShowGameOverUI(bool active) {
-        gameOverUI.SetActive(active);
+        // gameOverUI.SetActive(active);
+        // note: I'm intentionally doing this in a different way than the other 2 UIs for now.
+        // I attached the game-over logic to a separate script, which is attached to the `GameOverUI` root object
+        // that's why this looks a little different, though I think this way is much better.
+        gameOverUI.gameObject.SetActive(active);
+        gameOverUI.SetCatches(ScoreManager.Instance.GetCatches());
+        gameOverUI.SetMisses(ScoreManager.Instance.GetMisses());
     }
 
     public void UnloadAllUI() {
         mainMenuUI.SetActive(false);
         gameUI.SetActive(false);
-        gameOverUI.SetActive(false);
+        // gameOverUI.SetActive(false);
+        gameOverUI.gameObject.SetActive(false);
     }
 }
