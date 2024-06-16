@@ -161,3 +161,4 @@ ProjectSettings/BurstAotSettings_StandaloneWindows.json
 *.otf
 *.psd
 .pnotes/Next Time.md
+Assets/_Game/Audio/

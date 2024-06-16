@@ -33,7 +33,6 @@ public class GameOverUI : MonoBehaviour {
     }
 
     public void DisableButtons() {
-        print("wow playing again");
         playAgainButton.interactable = false;
         mainMenuButton.interactable = false;
     }
