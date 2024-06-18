@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class BGMController : MonoBehaviour {
     private AudioSource audioSource;
-    [SerializeField] private float volume;
+    [SerializeField] private float maxVolume;
     [SerializeField] private float fadeDuration;
     [SerializeField] private AudioClip mainMenuBGM;
     [SerializeField] private AudioClip gameRunningBGM;
@@ -12,7 +12,7 @@ public class BGMController : MonoBehaviour {
 
     private void Awake() {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = volume;
+        audioSource.volume = maxVolume;
     }
 
     private void OnEnable() {
@@ -49,8 +49,8 @@ public class BGMController : MonoBehaviour {
         audioSource.resource = nextBGM;
         audioSource.Play();
 
-        while (audioSource.volume < volume) {
-            audioSource.volume = Mathf.Lerp(0f, volume, timeElapsed/fadeDuration);
+        while (audioSource.volume < maxVolume) {
+            audioSource.volume = Mathf.Lerp(0f, maxVolume, timeElapsed/fadeDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
@@ -61,7 +61,7 @@ public class BGMController : MonoBehaviour {
         float timeElapsed = 0f;
 
         while (audioSource.volume > 0f && audioSource.isPlaying) {
-            audioSource.volume = Mathf.Lerp(volume, 0f, timeElapsed/fadeDuration);
+            audioSource.volume = Mathf.Lerp(maxVolume, 0f, timeElapsed/fadeDuration);
             timeElapsed += Time.deltaTime;
             yield return false;
         }
