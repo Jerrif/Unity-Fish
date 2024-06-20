@@ -62,6 +62,10 @@ public class FishManager : Singleton<FishManager> {
                 numCaught++;
             }
         }
+        if (numCaught > 3) {
+            // NOTE: this wouldn't be possible to do if the fish-caught logic was on the `Fish` itself.
+            print("WOW that's a lot of fish! " + numCaught);
+        }
 
         // TODO: why is this here and not in the intersection check?
         if (numCaught > 0) {

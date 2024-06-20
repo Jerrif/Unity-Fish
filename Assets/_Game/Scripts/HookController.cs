@@ -20,6 +20,10 @@ public class HookController : MonoBehaviour {
     public bool casting { get; private set; } = false;
     public bool reeling { get; private set; } = false;
 
+    // TODO: RESEARCH: if you make this a static event, then you won't need a reference
+    // to the `hookcontroller` in `FishManager`.
+    // Also I think you could potentially then get rid of `FishManager`,
+    // and just move the logic to the `Fish` itself? (OnHookLanded -> CheckIfCaught -> Die)
     public event Action<float> HookCastEvent;
     public event Action HookLandedEvent;
     // public event Action ReelingFinished;
