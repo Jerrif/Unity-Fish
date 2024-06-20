@@ -20,8 +20,8 @@ public class HookController : MonoBehaviour {
     public bool casting { get; private set; } = false;
     public bool reeling { get; private set; } = false;
 
-    public event Action<float> HookCast;
-    public event Action HookLanded;
+    public event Action<float> HookCastEvent;
+    public event Action HookLandedEvent;
     // public event Action ReelingFinished;
 
     private void Awake() {
@@ -50,7 +50,7 @@ public class HookController : MonoBehaviour {
             casting = false;
             
             // emit the HookLanded event, GameManager subs to this and does the collision checks
-            HookLanded?.Invoke();
+            HookLandedEvent?.Invoke();
 
             ReelIn();
         }
@@ -79,7 +79,7 @@ public class HookController : MonoBehaviour {
 
     private void CastHook() {
         casting = true;
-        HookCast?.Invoke(hookCastingTime);
+        HookCastEvent?.Invoke(hookCastingTime);
     }
 
     private void HandleMovement() {

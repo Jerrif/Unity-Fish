@@ -28,7 +28,7 @@ public class FishManager : Singleton<FishManager> {
             return;
         }
         // "hook" up (hehe) the HookLanded event from hookController to a function in here
-        hookController.HookLanded += HookLanded;
+        hookController.HookLandedEvent += OnHookLanded;
 
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.enabled = true;
@@ -39,7 +39,7 @@ public class FishManager : Singleton<FishManager> {
 
     private void OnDisable() {
         // gotta unsubscribe
-        hookController.HookLanded -= HookLanded;
+        hookController.HookLandedEvent -= OnHookLanded;
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.spawned -= FishSpawned;
             fishSpawner.enabled = false;
@@ -50,7 +50,7 @@ public class FishManager : Singleton<FishManager> {
         }
     }
 
-    private void HookLanded() {
+    private void OnHookLanded() {
         int numCaught = 0;
         Bounds hookBounds = hookController.sprite.bounds;
         List<Fish> caughtFish = new List<Fish>();
