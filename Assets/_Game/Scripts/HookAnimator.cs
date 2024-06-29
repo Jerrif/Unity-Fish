@@ -26,8 +26,11 @@ public class HookAnimator : MonoBehaviour {
     }
 
     private void OnEnable() {
-        _hookController.HookCastEvent += OnHookCast;
-        _hookController.HookLandedEvent += OnHookLanded;
+        // ahhhh had to do this when changing the hook events to `static`
+        // _hookController.HookCastEvent += OnHookCast;
+        // _hookController.HookLandedEvent += OnHookLanded;
+        HookController.HookCastEvent += OnHookCast;
+        HookController.HookLandedEvent += OnHookLanded;
         Color c = new Color(1f, 1f, 1f, 0f); // set alpha to 0 at start
         _sprite.color = c;
         transform.position = new Vector2(transform.position.x, transform.position.y + yOffset);
@@ -57,8 +60,10 @@ public class HookAnimator : MonoBehaviour {
     }
 
     private void OnDisable() {
-        _hookController.HookCastEvent -= OnHookCast;
-        _hookController.HookLandedEvent -= OnHookLanded;
+        // _hookController.HookCastEvent -= OnHookCast;
+        // _hookController.HookLandedEvent -= OnHookLanded;
+        HookController.HookCastEvent -= OnHookCast;
+        HookController.HookLandedEvent -= OnHookLanded;
         splashAnimator.Play("Idle", 0, 0f);
     }
 }

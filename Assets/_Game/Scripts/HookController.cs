@@ -24,9 +24,9 @@ public class HookController : MonoBehaviour {
     // to the `hookcontroller` in `FishManager`.
     // Also I think you could potentially then get rid of `FishManager`,
     // and just move the logic to the `Fish` itself? (OnHookLanded -> CheckIfCaught -> Die)
-    public event Action<float> HookCastEvent;
-    public event Action HookLandedEvent;
-    // public event Action ReelingFinished;
+    public static event Action<float> HookCastEvent;
+    public static event Action HookLandedEvent;
+    public static event Action HookReelingFinishedEvent;
 
     private void Awake() {
        if (!playArea) {
@@ -53,7 +53,7 @@ public class HookController : MonoBehaviour {
             hookCastingTimeElapsed = 0f;
             casting = false;
             
-            // emit the HookLanded event, GameManager subs to this and does the collision checks
+            // emit the HookLanded event, FishManager subs to this and does the collision checks
             HookLandedEvent?.Invoke();
 
             ReelIn();
@@ -67,7 +67,7 @@ public class HookController : MonoBehaviour {
             hookReelingTimeElapsed = 0f;
             reeling = false;
 
-            // ReelingFinished?.Invoke();
+            HookReelingFinishedEvent?.Invoke();
         }
 
         HandleMovement();

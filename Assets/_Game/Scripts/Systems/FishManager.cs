@@ -28,7 +28,9 @@ public class FishManager : Singleton<FishManager> {
             return;
         }
         // "hook" up (hehe) the HookLanded event from hookController to a function in here
-        hookController.HookLandedEvent += OnHookLanded;
+        // note: strange, changing the hook events to be `static` means I can't sub to the event from the actual reference
+        // hookController.HookLandedEvent += OnHookLanded;
+        HookController.HookLandedEvent += OnHookLanded;
 
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.enabled = true;
@@ -39,7 +41,8 @@ public class FishManager : Singleton<FishManager> {
 
     private void OnDisable() {
         // gotta unsubscribe
-        hookController.HookLandedEvent -= OnHookLanded;
+        // hookController.HookLandedEvent -= OnHookLanded;
+        HookController.HookLandedEvent -= OnHookLanded;
         foreach (FishSpawner fishSpawner in fishSpawners) {
             fishSpawner.spawned -= FishSpawned;
             fishSpawner.enabled = false;
@@ -78,6 +81,8 @@ public class FishManager : Singleton<FishManager> {
                 pointsTextObjectPool.Activate(cf.transform.position);
                 aliveFish.Remove(cf);
                 cf.Caught();
+
+                // SFXManager.Instance.Play(SFXType.CaughtFish);
             }
             fishCaughtEvent?.Invoke(numCaught);
         }
