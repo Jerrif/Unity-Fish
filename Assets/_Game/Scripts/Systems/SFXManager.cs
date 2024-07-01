@@ -126,6 +126,8 @@ public class SFXManager : MonoBehaviour {
     }
 
     private IEnumerator PlayPops(int numCaught) {
+        //idea: might be neat if the speed ramps up per fish. So the first couple are slow
+        // but then after like 7 it's going real fast
         for (int i = 0; i < numCaught; i++) {
             float variation = Random.Range(-0.03f, 0f);
             yield return new WaitForSeconds(0.08f + variation);
